@@ -1,0 +1,854 @@
+{
+  "users": [
+    {
+      "id": "0cdd",
+      "firstName": "Maurice",
+      "lastName": "Kamto",
+      "email": "kamto@gmail.com",
+      "password": "1234",
+      "phonenumber": "237m",
+      "bio": "directeur d;une entreprise immoboliere",
+      "profilePicture": "https://res.cloudinary.com/ddnolovmg/image/upload/v1759870409/iyjg9xcqvhsg56uzrhcm.jpg",
+      "followers": [],
+      "following": [],
+      "posts": [],
+      "favorites": []
+    },
+    {
+      "id": "d99e",
+      "firstName": "mark",
+      "lastName": "briss",
+      "email": "briss@gmail.com",
+      "password": "123h",
+      "phonenumber": "233",
+      "bio": "fils de dieu",
+      "profilePicture": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "followers": [],
+      "following": [],
+      "posts": [],
+      "favorites": []
+    },
+    {
+      "firstName": "djibrines",
+      "lastName": "moustaphas",
+      "email": "djibrine@gmail.com",
+      "phonenumber": "62228852",
+      "bio": "",
+      "profilePicture": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760892182/posts/vfkoguuzrcekgkzg4xkc.png",
+      "password": "123456",
+      "id": "f4ea"
+    },
+    {
+      "id": "1997",
+      "firstName": "triomphe",
+      "lastName": "wert",
+      "email": "dupont@gmail.com",
+      "password": "franc",
+      "phonenumber": "45678",
+      "bio": "",
+      "profilePicture": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760447898/xtfvzp0f7ito0u7suoqh.png",
+      "followers": [],
+      "following": [],
+      "posts": [],
+      "favorites": []
+    },
+    {
+      "id": "b399",
+      "firstName": "jeans",
+      "lastName": "thomas",
+      "email": "jean@gmail.com",
+      "password": "55m5",
+      "phonenumber": "53671u32y",
+      "bio": "je recherche un logement",
+      "profilePicture": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "followers": [],
+      "following": [],
+      "posts": [],
+      "favorites": []
+    },
+    {
+      "id": "53d1",
+      "firstName": "pierre",
+      "lastName": "marie",
+      "email": "pierre@gmail.com",
+      "password": "123 m",
+      "phonenumber": "373u32",
+      "bio": "le cameron est en chantier",
+      "profilePicture": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760643683/kua5imir1cmbkuerbdod.jpg",
+      "followers": [],
+      "following": [],
+      "posts": [],
+      "favorites": []
+    },
+    {
+      "id": "75d9",
+      "firstName": "alain",
+      "lastName": "jiresse",
+      "email": "alain@gmail.com",
+      "password": "555mn",
+      "phonenumber": "63281727",
+      "bio": "sans moi je ne suis rien",
+      "profilePicture": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "followers": [],
+      "following": [],
+      "posts": [],
+      "favorites": []
+    },
+    {
+      "id": "ac44",
+      "firstName": "ange",
+      "lastName": "pascal",
+      "email": "ange@gmail.com",
+      "password": "12k3",
+      "phonenumber": "73287",
+      "bio": "jwjdlkm,d",
+      "profilePicture": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "followers": [],
+      "following": [],
+      "posts": [],
+      "favorites": []
+    },
+    {
+      "id": "a600",
+      "firstName": "paul",
+      "lastName": "biya",
+      "email": "paul@gmail.com",
+      "password": "555,jm",
+      "phonenumber": "237mmmmmm",
+      "bio": "le cameroun a tant soufert",
+      "profilePicture": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "followers": [],
+      "following": [],
+      "posts": [],
+      "favorites": []
+    },
+    {
+      "id": "6586",
+      "firstName": "jdkms c",
+      "lastName": "j dc",
+      "email": "jeans@gmail.com",
+      "password": "555mbb",
+      "phonenumber": "uwewkl",
+      "bio": "nms sxm",
+      "profilePicture": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "followers": [],
+      "following": [],
+      "posts": [],
+      "favorites": []
+    },
+    {
+      "id": "cb1d",
+      "firstName": "atanga",
+      "lastName": "nji",
+      "email": "nji@gmail.com",
+      "password": "555nbfcd",
+      "phonenumber": "6387",
+      "bio": "dsnm",
+      "profilePicture": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "followers": [],
+      "following": [],
+      "posts": [],
+      "favorites": []
+    },
+    {
+      "firstName": " luises",
+      "lastName": "pauls",
+      "email": "jeant@gmail.com",
+      "phonenumber": "y3uy3i4",
+      "bio": "maintenant je veux que nous corigons la mise a jour d;un post avec sa propre route et et aussi tsyler comme celui de la mise a jour du profil d'un utilisateur .",
+      "profilePicture": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760791646/posts/ovm6hpknw8tzkzawshrm.jpg",
+      "password": "555hjkj,",
+      "id": "255b"
+    },
+    {
+      "id": "ce08",
+      "firstName": "styve",
+      "lastName": "fah",
+      "email": "fah@gmail.com",
+      "password": "5554m,",
+      "phonenumber": "2167",
+      "bio": "hjnmwdjk",
+      "profilePicture": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "followers": [],
+      "following": [],
+      "posts": [],
+      "favorites": []
+    }
+  ],
+  "posts": [
+    {
+      "id": "zuoikl1",
+      "userId": "0cdd",
+      "userName": "Maurice Kamto",
+      "userAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1759870409/iyjg9xcqvhsg56uzrhcm.jpg",
+      "content": "j'ai tris studio a louer",
+      "region": "centre",
+      "ville": "yde",
+      "quartier": "mokolo",
+      "type": "studio",
+      "images": [
+        "https://res.cloudinary.com/ddnolovmg/image/upload/v1759871633/bx8wnvjyd8mkoerf9eri.jpg"
+      ],
+      "videos": [],
+      "likes": [
+        {
+          "userId": "dbb3",
+          "userName": "dupont"
+        },
+        {
+          "userId": "d99e",
+          "userName": "mark"
+        },
+        {
+          "userId": "b399",
+          "userName": "jeans"
+        },
+        {}
+      ],
+      "comments": [
+        {
+          "id": "1760107999572",
+          "userId": "f4ea",
+          "userName": "djibrine moustapha",
+          "userAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760107853/oox0sfkgm4upfehwo6mx.png",
+          "text": "yiuhksjxlads,n"
+        }
+      ],
+      "createdAt": "2025-10-07T21:13:58.472Z"
+    },
+    {
+      "id": "opuawgk",
+      "userId": "0cdd",
+      "userName": "Maurice Kamto",
+      "userAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1759870409/iyjg9xcqvhsg56uzrhcm.jpg",
+      "content": "",
+      "region": "",
+      "ville": "",
+      "quartier": "",
+      "type": "",
+      "images": [],
+      "videos": [],
+      "likes": [
+        {
+          "userId": "d99e",
+          "userName": "mark"
+        },
+        {
+          "userId": "b399",
+          "userName": "jeans"
+        },
+        {
+          "userId": "0cdd",
+          "userName": "Maurice"
+        }
+      ],
+      "comments": [],
+      "createdAt": "2025-10-07T21:25:50.607Z"
+    },
+    {
+      "id": "uq01w9s",
+      "userId": "b399",
+      "userName": "jeans thomas",
+      "userAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "content": "je suis le createur de FindLocate, une solution pour le logement au cameroun! merci\n",
+      "region": "Ouest",
+      "ville": "Bafoussam",
+      "quartier": "saint Thomas",
+      "type": "appartement",
+      "images": [
+        "https://res.cloudinary.com/ddnolovmg/video/upload/v1760564671/posts/zvhrnctmyj23pqnu7djh.mp4"
+      ],
+      "videos": [
+        "https://res.cloudinary.com/ddnolovmg/video/upload/v1760564831/posts/q18jqa1vdmv3s99du5hc.mp4"
+      ],
+      "likes": [
+        {
+          "userId": "b399",
+          "userName": "jeans"
+        }
+      ],
+      "comments": [
+        {
+          "id": "1760642950808",
+          "userId": "b399",
+          "userName": "jeans thomas",
+          "userAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+          "text": "md,mfxc,"
+        },
+        {
+          "id": "1760643056541",
+          "userId": "b399",
+          "userName": "jeans thomas",
+          "userAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+          "text": "jk,"
+        },
+        {
+          "id": "1760643163560",
+          "userId": "b399",
+          "userName": "jeans thomas",
+          "userAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+          "text": "nnmmmmmmmmmmmmm"
+        },
+        {
+          "id": "1760896240006",
+          "userId": "f4ea",
+          "userName": "djibrines moustaphas",
+          "userAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760892182/posts/vfkoguuzrcekgkzg4xkc.png",
+          "text": "msmn"
+        }
+      ],
+      "createdAt": "2025-10-15T21:47:21.566Z",
+      "price": "30.000 fcfa"
+    },
+    {
+      "id": "hbd65zp",
+      "userId": "53d1",
+      "userName": "pierre marie",
+      "price": "23 627 21",
+      "userAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760643683/kua5imir1cmbkuerbdod.jpg",
+      "content": "j'ai dix appart a louer. je vous prie de bien vouloir getter un coup d;eil",
+      "region": "sur",
+      "ville": "ebolowa",
+      "quartier": "minbimaan",
+      "type": "appartement",
+      "images": [
+        "https://res.cloudinary.com/ddnolovmg/image/upload/v1760644100/pi9heoh7scvy7jprsgny.jpg"
+      ],
+      "videos": [],
+      "likes": [
+        {
+          "userId": "75d9",
+          "userName": "alain"
+        },
+        {},
+        {
+          "userId": "f4ea",
+          "userName": "djibrines"
+        }
+      ],
+      "comments": [
+        {
+          "id": "1760645815901",
+          "userId": "75d9",
+          "userName": "alain jiresse",
+          "userAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+          "text": "km,c znmc"
+        },
+        {
+          "id": "1760693994088",
+          "userId": "255b",
+          "userName": "luis paul",
+          "userAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+          "text": "bonjoiur"
+        },
+        {
+          "id": "1760704045414",
+          "userId": "255b",
+          "userName": "luis alain pauls",
+          "userAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+          "text": "jkasd,"
+        },
+        {
+          "id": "1760704056019",
+          "userId": "255b",
+          "userName": "luis alain pauls",
+          "userAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+          "text": "hhjsad"
+        }
+      ],
+      "createdAt": "2025-10-16T19:50:03.854Z"
+    },
+    {
+      "id": "mbe91j3",
+      "userId": "255b",
+      "userName": " luises pauls",
+      "price": "30.000",
+      "userAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760791646/posts/ovm6hpknw8tzkzawshrm.jpg",
+      "content": "je m'appelle luis , sans moi je ne suis rien",
+      "region": "nord",
+      "ville": "maroua",
+      "quartier": "mora",
+      "type": "appartement",
+      "images": [
+        "https://res.cloudinary.com/ddnolovmg/image/upload/v1760705288/posts/nzoyvqfrt1vo4snric5p.png",
+        "https://res.cloudinary.com/ddnolovmg/image/upload/v1760705334/posts/oigrubpoclkqb7v3ufhn.jpg"
+      ],
+      "videos": [],
+      "likes": [
+        {
+          "userId": "255b",
+          "userName": "luis alain"
+        },
+        {
+          "userId": "f4ea",
+          "userName": "djibrines"
+        }
+      ],
+      "comments": [
+        {
+          "id": "1760893950599",
+          "userId": "f4ea",
+          "userName": "djibrines moustaphas",
+          "userAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760892182/posts/vfkoguuzrcekgkzg4xkc.png",
+          "text": "bonjour .ccomment ca va ??\n"
+        }
+      ],
+      "createdAt": "2025-10-17T12:49:05.967Z"
+    },
+    {
+      "id": "hnbyiv6",
+      "userId": "255b",
+      "userName": " luises pauls",
+      "price": "100000",
+      "userAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760791646/posts/ovm6hpknw8tzkzawshrm.jpg",
+      "content": "bonjoir",
+      "region": "centre",
+      "ville": "yaounde",
+      "quartier": "etoudi",
+      "type": "appartement",
+      "images": [
+        "https://res.cloudinary.com/ddnolovmg/image/upload/v1760879628/posts/klm6wy66jomdymek1yv7.jpg"
+      ],
+      "videos": [],
+      "likes": [
+        {
+          "userId": "255b",
+          "userName": "luis alain"
+        },
+        {
+          "userId": "0cdd",
+          "userName": "Maurice"
+        }
+      ],
+      "comments": [
+        {
+          "id": "1760791460970",
+          "userId": "255b",
+          "userName": " luises pauls",
+          "userAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760791646/posts/ovm6hpknw8tzkzawshrm.jpg",
+          "text": "c'est qui elle??"
+        },
+        {
+          "id": "1760792920403",
+          "userId": "255b",
+          "userName": " luises pauls",
+          "userAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760791646/posts/ovm6hpknw8tzkzawshrm.jpg",
+          "text": "b kj, b"
+        },
+        {
+          "id": "1760893656293",
+          "userId": "f4ea",
+          "userName": "djibrines moustaphas",
+          "userAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760892182/posts/vfkoguuzrcekgkzg4xkc.png",
+          "text": "nosdm,dsnm"
+        }
+      ],
+      "createdAt": "2025-10-18T12:43:54.931Z"
+    },
+    {
+      "id": "z30zk5n",
+      "userId": "f4ea",
+      "userName": "djibrines moustaphas",
+      "price": "6737",
+      "userAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760892182/posts/vfkoguuzrcekgkzg4xkc.png",
+      "content": "bonjour",
+      "region": "kjadsm",
+      "ville": "jnsam",
+      "quartier": "jhsknm",
+      "type": "appartement",
+      "images": [
+        "https://res.cloudinary.com/ddnolovmg/image/upload/v1760964824/posts/rdpkx5vlvgoatnzmzvil.png"
+      ],
+      "videos": [],
+      "likes": [
+        {
+          "userId": "f4ea",
+          "userName": "djibrines"
+        },
+        {
+          "userId": "d99e",
+          "userName": "mark"
+        },
+        {
+          "userId": "0cdd",
+          "userName": "Maurice"
+        }
+      ],
+      "comments": [],
+      "createdAt": "2025-10-20T12:53:51.612Z"
+    },
+    {
+      "id": "9fubfwg",
+      "userId": "d99e",
+      "userName": "mark briss",
+      "price": "78743",
+      "userAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "content": "regarder cette dinguerie d'aparts",
+      "region": "nmsdnsn",
+      "ville": "ndnm",
+      "quartier": "kndm,",
+      "type": "appartement",
+      "images": [
+        "https://res.cloudinary.com/ddnolovmg/image/upload/v1760979354/posts/hzigf5uqp4nm8ke4ga3g.jpg"
+      ],
+      "videos": [],
+      "likes": [],
+      "comments": [],
+      "createdAt": "2025-10-20T16:56:07.386Z"
+    },
+    {
+      "id": "qbhg5tf",
+      "userId": "d99e",
+      "userName": "mark briss",
+      "price": "6325",
+      "userAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "content": "jndsc ",
+      "region": "ndmcnn",
+      "ville": "nmd,",
+      "quartier": "bnmsd",
+      "type": "appartement",
+      "images": [
+        "https://res.cloudinary.com/ddnolovmg/image/upload/v1760980574/posts/dzm9qxxfifktwhu6nqnh.jpg"
+      ],
+      "videos": [],
+      "likes": [
+        {
+          "userId": "0cdd",
+          "userName": "Maurice"
+        }
+      ],
+      "comments": [
+        {
+          "id": "1761037083644",
+          "userId": "0cdd",
+          "userName": "Maurice Kamto",
+          "userAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1759870409/iyjg9xcqvhsg56uzrhcm.jpg",
+          "text": "jm,cd,m",
+          "likes": [],
+          "replies": []
+        }
+      ],
+      "createdAt": "2025-10-20T17:16:17.204Z"
+    }
+  ],
+  "conversations": [
+    {},
+    {
+      "id": "hhh3vmb",
+      "userId": "f4ea",
+      "participantId": "255b",
+      "participantName": " luises pauls",
+      "participantAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760791646/posts/ovm6hpknw8tzkzawshrm.jpg",
+      "messages": [
+        {
+          "id": "1760941746089",
+          "senderId": "f4ea",
+          "senderName": "djibrines moustaphas",
+          "senderAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760892182/posts/vfkoguuzrcekgkzg4xkc.png",
+          "text": "bonjoir",
+          "createdAt": "2025-10-20T06:29:06.089Z"
+        }
+      ],
+      "lastMessage": "bonjoir",
+      "lastMessageTime": "2025-10-20T06:29:06.089Z",
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T06:28:54.287Z"
+    },
+    {
+      "id": "azf61ks",
+      "userId": "255b",
+      "participantId": "f4ea",
+      "participantName": "djibrines moustaphas",
+      "participantAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760892182/posts/vfkoguuzrcekgkzg4xkc.png",
+      "messages": [
+        {
+          "id": "1760943266577",
+          "senderId": "255b",
+          "senderName": " luises pauls",
+          "senderAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760791646/posts/ovm6hpknw8tzkzawshrm.jpg",
+          "text": "bonjour bro",
+          "createdAt": "2025-10-20T06:54:26.577Z"
+        }
+      ],
+      "lastMessage": "bonjour bro",
+      "lastMessageTime": "2025-10-20T06:54:26.577Z",
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T06:54:13.019Z"
+    },
+    {
+      "id": "turd0me",
+      "userId": "f4ea",
+      "participantId": "b399",
+      "participantName": "jeans thomas",
+      "participantAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "messages": [
+        {
+          "id": "1760954974786",
+          "senderId": "f4ea",
+          "senderName": "djibrines moustaphas",
+          "senderAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760892182/posts/vfkoguuzrcekgkzg4xkc.png",
+          "text": "hjdsjkm,dc",
+          "createdAt": "2025-10-20T10:09:34.786Z"
+        }
+      ],
+      "lastMessage": "hjdsjkm,dc",
+      "lastMessageTime": "2025-10-20T10:09:34.786Z",
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T10:09:25.795Z"
+    },
+    {
+      "id": "e4qn54w",
+      "userId": "f4ea",
+      "participantId": "255b",
+      "participantName": " luises pauls",
+      "participantAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760791646/posts/ovm6hpknw8tzkzawshrm.jpg",
+      "messages": [],
+      "lastMessage": "",
+      "lastMessageTime": "2025-10-20T10:51:31.608Z",
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T10:51:31.609Z"
+    },
+    {
+      "id": "necg31t",
+      "userId": "d99e",
+      "participantId": "f4ea",
+      "participantName": "djibrines moustaphas",
+      "participantAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760892182/posts/vfkoguuzrcekgkzg4xkc.png",
+      "messages": [
+        {
+          "id": "1760981995774",
+          "senderId": "d99e",
+          "senderName": "mark briss",
+          "senderAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+          "text": "bonjour",
+          "createdAt": "2025-10-20T17:39:55.774Z"
+        }
+      ],
+      "lastMessage": "bonjour",
+      "lastMessageTime": "2025-10-20T17:39:55.774Z",
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T17:39:36.558Z"
+    },
+    {
+      "id": "syv3745",
+      "userId": "d99e",
+      "participantId": "255b",
+      "participantName": " luises pauls",
+      "participantAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760791646/posts/ovm6hpknw8tzkzawshrm.jpg",
+      "messages": [
+        {
+          "id": "1760982081276",
+          "senderId": "d99e",
+          "senderName": "mark briss",
+          "senderAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+          "text": "salut",
+          "createdAt": "2025-10-20T17:41:21.276Z"
+        }
+      ],
+      "lastMessage": "salut",
+      "lastMessageTime": "2025-10-20T17:41:21.276Z",
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T17:40:58.450Z"
+    },
+    {
+      "id": "1d1qudq",
+      "userId": "d99e",
+      "participantId": "53d1",
+      "participantName": "pierre marie",
+      "participantAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760643683/kua5imir1cmbkuerbdod.jpg",
+      "messages": [
+        {
+          "id": "1760982147864",
+          "senderId": "d99e",
+          "senderName": "mark briss",
+          "senderAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+          "text": "ghvjhbm",
+          "createdAt": "2025-10-20T17:42:27.864Z"
+        }
+      ],
+      "lastMessage": "ghvjhbm",
+      "lastMessageTime": "2025-10-20T17:42:27.864Z",
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T17:42:16.587Z"
+    },
+    {
+      "id": "ojhybfq",
+      "userId": "255b",
+      "participantId": "d99e",
+      "participantName": "mark briss",
+      "participantAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "messages": [
+        {
+          "id": "1760982376893",
+          "senderId": "255b",
+          "senderName": " luises pauls",
+          "senderAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760791646/posts/ovm6hpknw8tzkzawshrm.jpg",
+          "text": "nhjnmcz,mxc",
+          "createdAt": "2025-10-20T17:46:16.893Z"
+        }
+      ],
+      "lastMessage": "nhjnmcz,mxc",
+      "lastMessageTime": "2025-10-20T17:46:16.893Z",
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T17:46:08.846Z"
+    },
+    {
+      "id": "23osnbr",
+      "userId": "d99e",
+      "participantId": "0cdd",
+      "participantName": "Maurice Kamto",
+      "participantAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1759870409/iyjg9xcqvhsg56uzrhcm.jpg",
+      "messages": [
+        {
+          "id": "1760982612128",
+          "senderId": "d99e",
+          "senderName": "mark briss",
+          "senderAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+          "text": "bonsoir maurice ",
+          "createdAt": "2025-10-20T17:50:12.128Z"
+        }
+      ],
+      "lastMessage": "bonsoir maurice ",
+      "lastMessageTime": "2025-10-20T17:50:12.128Z",
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T17:49:53.919Z"
+    },
+    {
+      "id": "dldb9xr",
+      "userId": "0cdd",
+      "participantId": "d99e",
+      "participantName": "mark briss",
+      "participantAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "messages": [
+        {
+          "id": "1761026789306",
+          "senderId": "0cdd",
+          "senderName": "Maurice Kamto",
+          "senderAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1759870409/iyjg9xcqvhsg56uzrhcm.jpg",
+          "text": "m,mn,mdzxc v",
+          "createdAt": "2025-10-21T06:06:29.306Z"
+        },
+        {
+          "id": "1761026799812",
+          "senderId": "0cdd",
+          "senderName": "Maurice Kamto",
+          "senderAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1759870409/iyjg9xcqvhsg56uzrhcm.jpg",
+          "text": "l;,l;ghf.jh",
+          "createdAt": "2025-10-21T06:06:39.812Z"
+        }
+      ],
+      "lastMessage": "l;,l;ghf.jh",
+      "lastMessageTime": "2025-10-21T06:06:39.812Z",
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T17:53:28.263Z"
+    },
+    {
+      "id": "wgbc1or",
+      "userId": "0cdd",
+      "participantId": "53d1",
+      "participantName": "pierre marie",
+      "participantAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760643683/kua5imir1cmbkuerbdod.jpg",
+      "messages": [],
+      "lastMessage": "",
+      "lastMessageTime": null,
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T20:16:28.634Z"
+    },
+    {
+      "id": "xqqbbbh",
+      "userId": "0cdd",
+      "participantId": "53d1",
+      "participantName": "pierre marie",
+      "participantAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760643683/kua5imir1cmbkuerbdod.jpg",
+      "messages": [],
+      "lastMessage": "",
+      "lastMessageTime": null,
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T20:16:55.103Z"
+    },
+    {
+      "id": "r0o908i",
+      "userId": "0cdd",
+      "participantId": "d99e",
+      "participantName": "mark briss",
+      "participantAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "messages": [],
+      "lastMessage": "",
+      "lastMessageTime": null,
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T20:17:16.313Z"
+    },
+    {
+      "id": "o205884",
+      "userId": "0cdd",
+      "participantId": "d99e",
+      "participantName": "mark briss",
+      "participantAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "messages": [],
+      "lastMessage": "",
+      "lastMessageTime": null,
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T20:18:04.683Z"
+    },
+    {
+      "id": "6k6ul94",
+      "userId": "0cdd",
+      "participantId": "d99e",
+      "participantName": "mark briss",
+      "participantAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "messages": [],
+      "lastMessage": "",
+      "lastMessageTime": null,
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T20:18:32.385Z"
+    },
+    {
+      "id": "2w3cprd",
+      "userId": "0cdd",
+      "participantId": "f4ea",
+      "participantName": "djibrines moustaphas",
+      "participantAvatar": "https://res.cloudinary.com/ddnolovmg/image/upload/v1760892182/posts/vfkoguuzrcekgkzg4xkc.png",
+      "messages": [],
+      "lastMessage": "",
+      "lastMessageTime": null,
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T20:18:48.094Z"
+    },
+    {
+      "id": "q8tme6e",
+      "userId": "0cdd",
+      "participantId": "d99e",
+      "participantName": "mark briss",
+      "participantAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "messages": [],
+      "lastMessage": "",
+      "lastMessageTime": null,
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T20:20:10.508Z"
+    },
+    {
+      "id": "exgkc9q",
+      "userId": "0cdd",
+      "participantId": "d99e",
+      "participantName": "mark briss",
+      "participantAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "messages": [],
+      "lastMessage": "",
+      "lastMessageTime": null,
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T20:22:08.903Z"
+    },
+    {
+      "id": "9v9q8rf",
+      "userId": "0cdd",
+      "participantId": "d99e",
+      "participantName": "mark briss",
+      "participantAvatar": "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      "messages": [],
+      "lastMessage": "",
+      "lastMessageTime": null,
+      "unreadCount": 0,
+      "createdAt": "2025-10-20T20:22:45.207Z"
+    }
+  ]
+}
