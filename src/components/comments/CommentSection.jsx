@@ -6,18 +6,23 @@ import {
   updateCommentThunk,
   deleteCommentThunk,
 } from '../../reducers/commentReducer'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import CommentItem from './CommentItem'
+import { showNotification } from '../../reducers/notificationReducer'
 
 const CommentSection = ({ post }) => {
   const dispatch = useDispatch()
   const { user, isAuthenticated } = useSelector((state) => state.auth)
   const [text, setText] = useState('')
-
+  const navigate = useNavigate()
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!isAuthenticated || !user) {
-      alert('Vous devez être connecté pour commenter.')
+      // alert('Vous devez être connecté pour commenter.')
+      dispatch(
+        showNotification('Error: Vous devez être connecté pour aimer!!.', 5)
+      )
+      navigate('/login')
       return
     }
     if (!text.trim()) return

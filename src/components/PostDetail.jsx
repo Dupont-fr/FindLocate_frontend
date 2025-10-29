@@ -4,12 +4,16 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Button } from './ui/button'
 import { Card } from './ui/card'
 import CommentSection from './comments/CommentSection'
-import StartMessageButton from './messages/StartMessageButton'
 import PostEditForm from './updates/PostEditForm'
 import ConfirmDeleteModal from './updates/ConfirmDeleteModal'
 import postService from '../services/postService'
+import messagingService from '../services/MessagingService'
 import { showNotification } from '../reducers/notificationReducer'
-import LikeButtonSimple from './LikeButton'
+import {
+  setActiveConversation,
+  setConversations,
+} from '../reducers/messagingReducer'
+import LikeButton from './LikeButton'
 
 const PostDetail = () => {
   const { postId } = useParams()
@@ -18,17 +22,15 @@ const PostDetail = () => {
 
   const { posts } = useSelector((state) => state.postForm)
   const { user, isAuthenticated } = useSelector((state) => state.auth)
+  // const { conversations } = useSelector((state) => state.messaging)
 
   const [post, setPost] = useState(null)
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0)
   const [showEdit, setShowEdit] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
 
-  // ✅ Charger dynamiquement le post (corrige le bug de rechargement)
   useEffect(() => {
     const foundPost = posts.find((p) => String(p.id) === String(postId))
-    console.log('Posts disponibles :', posts)
-    console.log('postId dans l’URL :', postId)
 
     if (foundPost) {
       setPost(foundPost)
@@ -49,7 +51,7 @@ const PostDetail = () => {
   if (!post) {
     return (
       <div style={styles.loading}>
-        <p>Chargement de l’annonce...</p>
+        <p>Chargement de l'annonce...</p>
         <Button onClick={() => navigate('/')}>Retour à l'accueil</Button>
       </div>
     )
@@ -77,6 +79,80 @@ const PostDetail = () => {
       dispatch(showNotification('Error: Échec de la suppression.', 4))
     }
   }
+  const handleStartConversation = async () => {
+    if (!isAuthenticated) {
+      dispatch(showNotification('Error: Vous devez être connecté.', 5))
+      navigate('/login')
+      return
+    }
+
+    if (user.id === post.userId) {
+      dispatch(
+        showNotification(
+          'Error: Vous ne pouvez pas vous envoyer de messages.',
+          5
+        )
+      )
+      return
+    }
+
+    try {
+      console.log(' Démarrage de la conversation...')
+      console.log('User:', {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      })
+      console.log('Post:', { userId: post.userId, userName: post.userName })
+
+      //  Étape 1 : Vérifier si une conversation existe déjà
+      const existingConv = await messagingService.findExistingConversation(
+        user.id,
+        post.userId
+      )
+
+      if (existingConv) {
+        console.log(' Conversation existante trouvée:', existingConv.id)
+        dispatch(setActiveConversation(existingConv.id))
+        navigate('/messages')
+        return
+      }
+
+      console.log(" Création d'une nouvelle conversation...")
+
+      //  AJOUT : On appelle directement createConversation avec les bons paramètres
+      const createdConv = await messagingService.createConversation(
+        post.userId,
+        post.userName || 'Utilisateur inconnu',
+        post.userAvatar ||
+          `https://ui-avatars.com/api/?name=${post.userName || 'User'}`
+      )
+
+      console.log(' Conversation créée avec succès:', createdConv)
+
+      //  Recharger toutes les conversations
+      const allConversations = await messagingService.getUserConversations()
+      dispatch(setConversations(allConversations))
+
+      //  Activer la nouvelle conversation
+      dispatch(setActiveConversation(createdConv.id))
+
+      console.log(
+        ' Navigation vers /messages avec conversation ID:',
+        createdConv.id
+      )
+
+      navigate('/messages')
+      dispatch(showNotification('success: Conversation créée avec succès !', 3))
+    } catch (error) {
+      console.error(' Erreur complète:', error)
+      console.error(" Message d'erreur:", error.message)
+      console.error(' Stack:', error.stack)
+      dispatch(
+        showNotification('Error: Impossible de démarrer la conversation.', 5)
+      )
+    }
+  }
 
   const isVideo = (url) =>
     url.includes('.mp4') || url.includes('.webm') || url.includes('video')
@@ -85,7 +161,7 @@ const PostDetail = () => {
     <div style={styles.container}>
       {/* Header avec retour */}
       <button onClick={() => navigate(-1)} style={styles.backButton}>
-        Retour
+        ← Retour
       </button>
 
       <div style={styles.content}>
@@ -111,14 +187,10 @@ const PostDetail = () => {
                 {allMedia.length > 1 && (
                   <>
                     <button onClick={prevMedia} style={styles.navButtonLeft}>
-                      <button onClick={prevMedia} style={styles.navButtonLeft}>
-                        back
-                      </button>
+                      ←
                     </button>
                     <button onClick={nextMedia} style={styles.navButtonRight}>
-                      <button onClick={prevMedia} style={styles.navButtonLeft}>
-                        next
-                      </button>{' '}
+                      →
                     </button>
                     <div style={styles.mediaCounter}>
                       {currentMediaIndex + 1} / {allMedia.length}
@@ -143,7 +215,7 @@ const PostDetail = () => {
                     border:
                       index === currentMediaIndex
                         ? '3px solid #1877f2'
-                        : 'none',
+                        : '1px solid #ddd',
                   }}
                 >
                   {isVideo(media) ? (
@@ -221,20 +293,20 @@ const PostDetail = () => {
             </div>
 
             <div style={styles.ownerActions}>
-              <Link to={`/user/${post.userId}`} style={{ flex: 1 }}>
+              <Link
+                to={`/user/${post.userId}`}
+                style={{ flex: 1, textDecoration: 'none' }}
+              >
                 <Button style={styles.viewProfileBtn}>👁️ Voir le profil</Button>
               </Link>
 
-              {/* ✅ Bouton Message mis à jour */}
               {user?.id !== post.userId && (
-                <div style={{ flex: 1 }}>
-                  <StartMessageButton
-                    key={post.userId} // ✅ clé unique pour forcer le refresh
-                    userId={post.userId}
-                    userName={post.userName}
-                    userAvatar={post.userAvatar}
-                  />
-                </div>
+                <Button
+                  onClick={handleStartConversation}
+                  style={styles.messageBtn}
+                >
+                  Discuter
+                </Button>
               )}
             </div>
           </Card>
@@ -247,13 +319,13 @@ const PostDetail = () => {
                   onClick={() => setShowEdit(true)}
                   style={styles.editBtn}
                 >
-                  ✏️ Modifier
+                  Modifier
                 </Button>
                 <Button
                   onClick={() => setConfirmDelete(true)}
                   style={styles.deleteBtn}
                 >
-                  🗑️ Supprimer
+                  Supprimer
                 </Button>
               </div>
             </Card>
@@ -262,7 +334,7 @@ const PostDetail = () => {
           {/* Likes */}
           <Card style={styles.infoCard}>
             <div style={styles.likesSection}>
-              <LikeButtonSimple post={post} />
+              <LikeButton post={post} />
             </div>
           </Card>
 
@@ -317,8 +389,13 @@ const styles = {
   },
   content: {
     display: 'grid',
-    gridTemplateColumns: '1.5fr 1fr',
+    gridTemplateColumns: '1fr',
     gap: '24px',
+  },
+  '@media (min-width: 768px)': {
+    content: {
+      gridTemplateColumns: '1.5fr 1fr',
+    },
   },
   mediaSection: {
     display: 'flex',
@@ -334,7 +411,7 @@ const styles = {
   mediaGallery: {
     position: 'relative',
     width: '100%',
-    height: '600px',
+    height: '400px',
     backgroundColor: '#000',
   },
   mediaItem: {
@@ -343,7 +420,7 @@ const styles = {
     objectFit: 'contain',
   },
   noMedia: {
-    height: '600px',
+    height: '400px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -354,32 +431,36 @@ const styles = {
     left: '16px',
     top: '50%',
     transform: 'translateY(-50%)',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.6)',
     color: '#fff',
     border: 'none',
     borderRadius: '50%',
-    width: '48px',
-    height: '48px',
+    width: '40px',
+    height: '40px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
+    fontSize: '20px',
+    fontWeight: 'bold',
   },
   navButtonRight: {
     position: 'absolute',
     right: '16px',
     top: '50%',
     transform: 'translateY(-50%)',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.6)',
     color: '#fff',
     border: 'none',
     borderRadius: '50%',
-    width: '48px',
-    height: '48px',
+    width: '40px',
+    height: '40px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
+    fontSize: '20px',
+    fontWeight: 'bold',
   },
   mediaCounter: {
     position: 'absolute',
@@ -394,12 +475,12 @@ const styles = {
   },
   thumbnails: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
-    gap: '12px',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
+    gap: '8px',
   },
   thumbnail: {
     width: '100%',
-    height: '80px',
+    height: '60px',
     borderRadius: '8px',
     overflow: 'hidden',
     cursor: 'pointer',
@@ -422,7 +503,7 @@ const styles = {
     border: '1px solid #e5e5e5',
   },
   price: {
-    fontSize: '32px',
+    fontSize: '28px',
     fontWeight: 'bold',
     color: '#2a8f2a',
     margin: 0,
@@ -503,33 +584,57 @@ const styles = {
   ownerActions: {
     display: 'flex',
     gap: '12px',
+    flexWrap: 'wrap',
   },
   viewProfileBtn: {
     width: '100%',
     padding: '12px',
     backgroundColor: '#1877f2',
     color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+  },
+  messageBtn: {
+    flex: 1,
+    padding: '12px',
+    backgroundColor: '#25D366',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
   },
   ownerModifyActions: {
     display: 'flex',
     gap: '12px',
+    flexWrap: 'wrap',
   },
   editBtn: {
     flex: 1,
     padding: '12px',
     backgroundColor: '#1877f2',
     color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
   },
   deleteBtn: {
     flex: 1,
     padding: '12px',
     backgroundColor: '#f44336',
     color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
   },
   likesSection: {
     display: 'flex',
     alignItems: 'center',
   },
-} //  inchangé
+}
 
 export default PostDetail

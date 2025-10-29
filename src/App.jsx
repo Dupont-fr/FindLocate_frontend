@@ -6,8 +6,6 @@ import {
   Link,
   Navigate,
 } from 'react-router'
-import { useSelector, useDispatch } from 'react-redux'
-import { setSearchQuery } from './reducers/searchReducer'
 import Register from './components/Register'
 import PostForm from './components/PostForm'
 import Home from './components/Home'
@@ -21,11 +19,26 @@ import DeleteAccount from './components/DeleteAccount'
 import './index.css'
 import Messages from './components/messages/Message'
 import PostDetail from './components/PostDetail'
+import { useSelector } from 'react-redux'
+import ForgotPassword from './components/utils/ForgotPassword'
+import VerifyEmailCode from './components/utils/VerifyEmailCode'
+import VerifyResetCode from './components/utils/VerifyResetCode'
+import './components/utils/auth-styles.css'
+import { useEffect } from 'react'
+import socketService from './services/socket'
 
 const App = () => {
-  const dispatch = useDispatch()
-  const { isAuthenticated } = useSelector((state) => state.auth)
-  const { query } = useSelector((state) => state.search)
+  const { user, isAuthenticated } = useSelector((state) => state.auth)
+
+  useEffect(() => {
+    if (isAuthenticated && user?.id) {
+      socketService.connect(user.id)
+
+      return () => {
+        socketService.disconnect()
+      }
+    }
+  }, [isAuthenticated, user?.id])
 
   return (
     <Router>
@@ -37,31 +50,22 @@ const App = () => {
             🏡 FindLocate
           </Link>
 
-          {/* 🔍 Barre de recherche */}
-          <input
-            type='text'
-            className='navbar-search'
-            placeholder='Rechercher par ville, région, type, prix...'
-            value={query}
-            onChange={(e) => dispatch(setSearchQuery(e.target.value))}
-          />
-
           {/* Liens et actions */}
           <div className='navbar-links'>
             <Link to='/' className='nav-link'>
-              Home
+              Acceuil
             </Link>
             <Link to='/add' className='nav-link'>
-              Add new
+              Ajouter
             </Link>
 
             {!isAuthenticated ? (
               <>
                 <Link to='/register' className='nav-link'>
-                  Register
+                  Inscription
                 </Link>
                 <Link to='/login' className='nav-link'>
-                  Login
+                  Connexion
                 </Link>
               </>
             ) : (
@@ -129,6 +133,10 @@ const App = () => {
             }
           />
           <Route path='*' element={<Navigate to='/' replace />} />
+          <Route path='/forgot-password' element={<ForgotPassword />} />
+          <Route path='/verify-email-code' element={<VerifyEmailCode />} />
+          <Route path='/forgot-password' element={<ForgotPassword />} />
+          <Route path='/verify-reset-code' element={<VerifyResetCode />} />
         </Routes>
       </div>
     </Router>

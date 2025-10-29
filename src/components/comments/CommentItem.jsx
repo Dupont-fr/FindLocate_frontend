@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Link } from 'react-router'
+import { Link, Navigate, useNavigate } from 'react-router'
 import {
   toggleCommentLikeThunk,
   addReplyThunk,
   deleteReplyThunk,
   toggleReplyLikeThunk,
 } from '../../reducers/commentReducer'
+import { showNotification } from '../../reducers/notificationReducer'
 
 const CommentItem = ({ comment, postId, currentUser, onEdit, onDelete }) => {
   const dispatch = useDispatch()
@@ -17,6 +18,7 @@ const CommentItem = ({ comment, postId, currentUser, onEdit, onDelete }) => {
   const [showReplyForm, setShowReplyForm] = useState(false)
   const [replyText, setReplyText] = useState('')
   const [showReplies, setShowReplies] = useState(false)
+  const navigate = useNavigate()
 
   const isOwner = currentUser?.id === comment.userId
   const isCurrentUser = currentUser?.id === comment.userId
@@ -42,7 +44,11 @@ const CommentItem = ({ comment, postId, currentUser, onEdit, onDelete }) => {
 
   const handleLikeComment = () => {
     if (!currentUser) {
-      alert('Vous devez être connecté pour aimer.')
+      // alert('Vous devez être connecté pour aimer.')
+      dispatch(
+        showNotification('Error: Vous devez être connecté pour aimer!!.', 5)
+      )
+      navigate('/login')
       return
     }
     dispatch(toggleCommentLikeThunk(postId, comment.id, currentUser))
@@ -50,7 +56,9 @@ const CommentItem = ({ comment, postId, currentUser, onEdit, onDelete }) => {
 
   const handleAddReply = () => {
     if (!currentUser) {
-      alert('Vous devez être connecté pour répondre.')
+      // alert('Vous devez être connecté pour répondre.')
+      dispatch(showNotification('Vous devez être connecté pour répondre!!.', 5))
+      navigate('/login')
       return
     }
     if (!replyText.trim()) return
@@ -75,7 +83,11 @@ const CommentItem = ({ comment, postId, currentUser, onEdit, onDelete }) => {
 
   const handleLikeReply = (replyId) => {
     if (!currentUser) {
-      alert('Vous devez être connecté pour aimer.')
+      // alert('Vous devez être connecté pour aimer.')
+      dispatch(
+        showNotification('Error: Vous devez être connecté pour aimer!!.', 5)
+      )
+      navigate('/login')
       return
     }
     dispatch(toggleReplyLikeThunk(postId, comment.id, replyId, currentUser))

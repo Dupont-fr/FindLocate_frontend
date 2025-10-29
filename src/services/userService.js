@@ -1,6 +1,14 @@
 import axios from 'axios'
+import { getToken } from './authService'
 
-const baseUrl = 'http://localhost:3003/users'
+const baseUrl = 'http://localhost:3003/api/users'
+
+// Configuration pour inclure le token dans les requêtes
+const getConfig = () => ({
+  headers: {
+    Authorization: `Bearer ${getToken()}`,
+  },
+})
 
 // Récupérer tous les utilisateurs
 export const getUsers = async () => {
@@ -8,56 +16,56 @@ export const getUsers = async () => {
   return response.data
 }
 
-// Créer un nouvel utilisateur
-// export const createUser = async (userData) => {
-//   const response = await axios.post(baseUrl, userData)
-//   return response.data
-// }
-export const checkUserExists = async (email, phonenumber, password) => {
-  const res = await axios.get(baseUrl)
-  const users = res.data
-
-  // Vérifie les doublons
-  const emailExists = users.some((u) => u.email === email)
-  const phoneExists = users.some((u) => u.phonenumber === phonenumber)
-  const passwordExists = users.some((u) => u.password === password)
-
-  return { emailExists, phoneExists, passwordExists }
-}
-
-export const createUser = async (newUser) => {
-  const res = await axios.post(baseUrl, newUser)
-  return res.data
-}
-
 // Récupérer un utilisateur par ID
-const getUserById = async (id) => {
-  const res = await fetch(`${baseUrl}/${id}`)
-  if (!res.ok) throw new Error('Utilisateur introuvable')
-  return await res.json()
+export const getUserById = async (id) => {
+  const response = await axios.get(`${baseUrl}/${id}`)
+  return response.data
 }
 
-// Mettre à jour un utilisateur
+// Créer un utilisateur (utiliser registerUser de authService à la place)
+export const createUser = async (newUser) => {
+  const response = await axios.post(
+    'http://localhost:3003/api/auth/register',
+    newUser
+  )
+  return response.data.user
+}
+
+// Vérifier si un utilisateur existe (pour la validation côté client)
+export const checkUserExists = async (email, phonenumber) => {
+  try {
+    const users = await getUsers()
+
+    const emailExists = users.some((u) => u.email === email)
+    const phoneExists = users.some((u) => u.phonenumber === phonenumber)
+
+    return { emailExists, phoneExists }
+  } catch (error) {
+    console.error('Error checking user existence:', error)
+    return { emailExists: false, phoneExists: false }
+  }
+}
+
+// Mettre à jour un utilisateur (requiert authentification)
 export const updateUser = async (id, updatedData) => {
-  const res = await axios.put(`${baseUrl}/${id}`, updatedData)
-  return res.data
+  const response = await axios.put(`${baseUrl}/${id}`, updatedData, getConfig())
+  return response.data
 }
 
-// Supprimer un utilisateur
+// Supprimer un utilisateur (requiert authentification)
 export const deleteUser = async (id) => {
-  const res = await fetch(`${baseUrl}/${id}`, { method: 'DELETE' })
-  if (!res.ok) throw new Error('Erreur suppression utilisateur')
+  await axios.delete(`${baseUrl}/${id}`, getConfig())
   return true
 }
 
+// Récupérer les posts d'un utilisateur
 export const getUserPosts = async (userId) => {
-  //  ne surtout pas mettre /users ici !
-  const response = await fetch(`http://localhost:3003/posts?userId=${userId}`)
-  if (!response.ok) {
-    throw new Error('Erreur récupération des posts')
-  }
-  return await response.json()
+  const response = await axios.get(
+    `http://localhost:3003/api/posts?userId=${userId}`
+  )
+  return response.data
 }
+
 export default {
   getUserById,
   updateUser,
@@ -65,4 +73,5 @@ export default {
   createUser,
   getUsers,
   getUserPosts,
+  checkUserExists,
 }

@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 import { Badge } from './ui/badge'
+import { showNotification } from '../reducers/notificationReducer'
+import Notification from './Notification'
 
 const PostCard = ({ post }) => {
   const navigate = useNavigate()
@@ -21,7 +23,10 @@ const PostCard = ({ post }) => {
     e.preventDefault()
 
     if (!user) {
-      alert('Vous devez être connecté pour aimer un post')
+      // alert('Vous devez être connecté pour aimer un post')
+      dispatch(
+        showNotification('Vous devez être connecté pour aimer un post !', 5)
+      )
       return
     }
 
@@ -33,6 +38,7 @@ const PostCard = ({ post }) => {
 
   return (
     <div onClick={handleCardClick} style={styles.card}>
+      <Notification />
       {/* Image principale avec bouton like flottant */}
       <div style={styles.imageContainer}>
         {post.images?.length > 0 ? (

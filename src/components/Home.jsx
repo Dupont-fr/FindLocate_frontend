@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import { fetchPostsThunk } from '../reducers/postFormReducer'
 import PostCard from './PostCard'
+import { setSearchQuery } from '../reducers/searchReducer'
 
 const Home = () => {
   const dispatch = useDispatch()
@@ -46,6 +47,20 @@ const Home = () => {
             Des milliers d'annonces d'appartements, maisons et studios à travers
             le Cameroun
           </p>
+          {/* 🔍 Barre de recherche */}
+          <div style={styles.searchBarContainer}>
+            <div style={styles.searchBar}>
+              <span style={styles.searchIcon}></span>
+              <input
+                type='text'
+                placeholder='Rechercher par ville, région, type, prix...'
+                value={query}
+                onChange={(e) => dispatch(setSearchQuery(e.target.value))}
+                style={styles.searchInput}
+              />
+              <button style={styles.searchButton}>Rechercher</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -124,9 +139,9 @@ const Home = () => {
             <p style={styles.emptyText}>
               Aucune annonce ne correspond à votre recherche
             </p>
-            {/* <button onClick={() => navigate('/add')} style={styles.createBtn}>
+            <button onClick={() => navigate('/add')} style={styles.createBtn}>
               + Créer une annonce
-            </button> */}
+            </button>
           </div>
         )}
       </div>
@@ -252,6 +267,51 @@ const styles = {
     cursor: 'pointer',
     fontSize: '14px',
     fontWeight: 'bold',
+  },
+  searchBarContainer: {
+    marginTop: '20px',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+
+  searchBar: {
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: '12px',
+    padding: '8px',
+    boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+    width: '90%',
+    maxWidth: '600px',
+  },
+
+  searchIcon: {
+    fontSize: '18px',
+    color: '#555',
+    marginLeft: '10px',
+    marginRight: '8px',
+  },
+
+  searchInput: {
+    flex: 1,
+    border: 'none',
+    outline: 'none',
+    fontSize: '15px',
+    color: '#333',
+    backgroundColor: 'transparent',
+  },
+
+  searchButton: {
+    backgroundColor: '#1877f2',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '10px 20px',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s',
   },
 }
 

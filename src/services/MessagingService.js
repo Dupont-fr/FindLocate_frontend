@@ -1,97 +1,178 @@
-const API_URL = 'http://localhost:3003/conversations'
+// ✅ AJOUT: Import axios et getToken
+import axios from 'axios'
+import { getToken } from './authService'
 
-// Récupérer toutes les conversations d'un utilisateur
-const getUserConversations = async (userId) => {
+// ✅ MODIFIÉ: Changer l'URL pour pointer vers l'API backend avec authentification
+const API_URL = 'http://localhost:3003/api/conversations'
+
+// ✅ AJOUT: Configuration pour inclure le token JWT
+const getConfig = () => ({
+  headers: {
+    Authorization: `Bearer ${getToken()}`,
+    'Content-Type': 'application/json',
+  },
+})
+
+/**
+ * Récupérer toutes les conversations de l'utilisateur connecté
+ * ✅ MODIFIÉ: Utilise axios + authentification JWT (le backend filtre automatiquement)
+ */
+const getUserConversations = async () => {
   try {
-    const res = await fetch(`${API_URL}?userId=${userId}`)
-    if (!res.ok) throw new Error('Erreur chargement conversations')
-    return await res.json()
+    const response = await axios.get(API_URL, getConfig())
+    return response.data
   } catch (error) {
-    console.error('Erreur getUserConversations:', error)
-    throw error
+    console.error('❌ Erreur getUserConversations:', error)
+    throw new Error(
+      error.response?.data?.error || 'Erreur chargement conversations'
+    )
   }
 }
 
-// Récupérer une conversation spécifique
+/**
+ * Récupérer une conversation spécifique
+ * ✅ MODIFIÉ: Utilise axios + authentification JWT
+ */
 const getConversation = async (conversationId) => {
   try {
-    const res = await fetch(`${API_URL}/${conversationId}`)
-    if (!res.ok) throw new Error('Conversation non trouvée')
-    return await res.json()
+    const response = await axios.get(
+      `${API_URL}/${conversationId}`,
+      getConfig()
+    )
+    return response.data
   } catch (error) {
-    console.error('Erreur getConversation:', error)
-    throw error
+    console.error('❌ Erreur getConversation:', error)
+    throw new Error(error.response?.data?.error || 'Conversation non trouvée')
   }
 }
 
-// Créer une nouvelle conversation
-const createConversation = async (conversation) => {
+/**
+ * Créer une nouvelle conversation ou récupérer une existante
+ * ✅ MODIFIÉ: Format simplifié - le backend gère user1 automatiquement
+ */
+const createConversation = async (user2Id, user2Name, user2Avatar) => {
   try {
-    if (!conversation.id) {
-      conversation.id = Math.random().toString(36).substring(2, 9)
-    }
-
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...conversation,
-        messages: conversation.messages || [],
-        createdAt: new Date().toISOString(),
-      }),
-    })
-
-    if (!res.ok) throw new Error('Erreur création conversation')
-    return await res.json()
+    const response = await axios.post(
+      API_URL,
+      { user2Id, user2Name, user2Avatar },
+      getConfig()
+    )
+    return response.data
   } catch (error) {
-    console.error('Erreur createConversation:', error)
-    throw error
+    console.error('❌ Erreur createConversation:', error)
+    throw new Error(
+      error.response?.data?.error || 'Erreur création conversation'
+    )
   }
 }
 
-// Ajouter un message à une conversation
-const addMessage = async (conversationId, message) => {
+/**
+ * Ajouter un message à une conversation
+ * ✅ MODIFIÉ: Envoie seulement le texte - le backend crée l'objet message complet
+ */
+const addMessage = async (conversationId, text) => {
   try {
-    const res = await fetch(`${API_URL}/${conversationId}`)
-    if (!res.ok) throw new Error('Conversation non trouvée')
-
-    const conversation = await res.json()
-
-    if (!conversation.messages) {
-      conversation.messages = []
-    }
-
-    const newMessage = {
-      id: Date.now().toString(),
-      ...message,
-      createdAt: new Date().toISOString(),
-    }
-
-    conversation.messages.push(newMessage)
-    conversation.lastMessage = message.text
-    conversation.lastMessageTime = newMessage.createdAt
-
-    const updateRes = await fetch(`${API_URL}/${conversationId}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(conversation),
-    })
-
-    if (!updateRes.ok) throw new Error('Erreur ajout message')
-    return await updateRes.json()
+    const response = await axios.post(
+      `${API_URL}/${conversationId}/messages`,
+      { text },
+      getConfig()
+    )
+    return response.data
   } catch (error) {
-    console.error('Erreur addMessage:', error)
-    throw error
+    console.error('❌ Erreur addMessage:', error)
+    throw new Error(error.response?.data?.error || 'Erreur ajout message')
   }
 }
 
-// Vérifier si une conversation existe entre deux utilisateurs
+/**
+ * Modifier un message
+ * ✅ AJOUT: Nouvelle route RESTful
+ */
+const updateMessage = async (conversationId, messageId, text) => {
+  try {
+    const response = await axios.put(
+      `${API_URL}/${conversationId}/messages/${messageId}`,
+      { text },
+      getConfig()
+    )
+    return response.data
+  } catch (error) {
+    console.error('❌ Erreur updateMessage:', error)
+    throw new Error(
+      error.response?.data?.error || 'Erreur modification message'
+    )
+  }
+}
+
+/**
+ * Supprimer un message
+ * ✅ MODIFIÉ: Utilise la nouvelle route RESTful
+ */
+const deleteMessage = async (conversationId, messageId) => {
+  try {
+    const response = await axios.delete(
+      `${API_URL}/${conversationId}/messages/${messageId}`,
+      getConfig()
+    )
+    return response.data
+  } catch (error) {
+    console.error('❌ Erreur deleteMessage:', error)
+    throw new Error(error.response?.data?.error || 'Erreur suppression message')
+  }
+}
+
+/**
+ * Marquer tous les messages d'une conversation comme lus
+ * ✅ AJOUT: Nouvelle fonctionnalité
+ */
+const markMessagesAsRead = async (conversationId) => {
+  try {
+    const response = await axios.patch(
+      `${API_URL}/${conversationId}/read`,
+      {},
+      getConfig()
+    )
+    return response.data
+  } catch (error) {
+    console.error('❌ Erreur markMessagesAsRead:', error)
+    throw new Error(
+      error.response?.data?.error || 'Erreur marquage messages lus'
+    )
+  }
+}
+
+/**
+ * Supprimer une conversation (suppression logique)
+ * ✅ MODIFIÉ: Plus besoin de passer userId - le backend le récupère du token
+ */
+const deleteConversationForUser = async (conversationId) => {
+  try {
+    await axios.delete(`${API_URL}/${conversationId}`, getConfig())
+    return true
+  } catch (error) {
+    console.error('❌ Erreur deleteConversationForUser:', error)
+    throw new Error(
+      error.response?.data?.error || 'Erreur suppression conversation'
+    )
+  }
+}
+
+/**
+ * Vérifie s'il existe une conversation entre deux utilisateurs
+ * ✅ CONSERVÉ: Pour compatibilité (utilise getUserConversations)
+ */
 const findExistingConversation = async (userId1, userId2) => {
   try {
-    const conversations = await getUserConversations(userId1)
-    return conversations.find((c) => c.participantId === userId2) || null
+    const conversations = await getUserConversations()
+    return (
+      conversations.find(
+        (conv) =>
+          (conv.user1Id === userId1 && conv.user2Id === userId2) ||
+          (conv.user1Id === userId2 && conv.user2Id === userId1)
+      ) || null
+    )
   } catch (error) {
-    console.error('Erreur findExistingConversation:', error)
+    console.error('❌ Erreur findExistingConversation:', error)
     return null
   }
 }
@@ -101,5 +182,9 @@ export default {
   getConversation,
   createConversation,
   addMessage,
+  updateMessage,
+  deleteMessage,
+  markMessagesAsRead,
+  deleteConversationForUser,
   findExistingConversation,
 }

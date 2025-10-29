@@ -99,6 +99,15 @@ const PostForm = () => {
       comments: [],
       createdAt: new Date().toISOString(),
     }
+    if (content.inputProps.value.trim().length < 10) {
+      dispatch(
+        showNotification(
+          'Error: La description doit contenir au moins 10 caractères.',
+          5
+        )
+      )
+      return
+    }
 
     dispatch(createPostThunk(newPost))
     dispatch(showNotification('Success: Annonce publiée avec succès !', 5))
@@ -202,8 +211,16 @@ const PostForm = () => {
                   key={i}
                   src={img}
                   alt='preview'
-                  width={90}
-                  style={{ borderRadius: '8px', margin: 4 }}
+                  width={120}
+                  style={{
+                    borderRadius: '8px',
+                    margin: 4,
+                    position: 'relative',
+                    width: '310px',
+                    height: '310px',
+                    overflow: 'hidden',
+                    flexShrink: 0,
+                  }}
                 />
               ))}
             </div>

@@ -137,32 +137,62 @@ const styles = {
     display: 'flex',
     height: 'calc(100vh - 80px)',
     backgroundColor: '#fff',
+    // 📱 Mobile: Passe en colonne et ajuste la hauteur
+    '@media (max-width: 768px)': {
+      flexDirection: 'column',
+      height: 'calc(100vh - 60px)', // 📱 Header mobile plus petit
+    },
   },
+
   sidebar: {
     width: '300px',
     borderRight: '1px solid #eee',
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: '#fff',
+    // 📱 Mobile: Prend toute la largeur ou se cache selon l'état
+    '@media (max-width: 768px)': {
+      width: '100%',
+      borderRight: 'none',
+      borderBottom: '1px solid #eee',
+      // 📱 Si une conversation est active, on cache la sidebar
+      // (vous devrez gérer ça avec du state)
+    },
   },
+
   title: {
     padding: '15px',
     margin: 0,
     fontSize: '24px',
     fontWeight: 'bold',
     borderBottom: '1px solid #eee',
+    // 📱 Mobile: Plus petit
+    '@media (max-width: 768px)': {
+      fontSize: '20px',
+      padding: '12px 15px',
+    },
   },
+
   searchInput: {
     padding: '10px 15px',
     border: 'none',
     borderBottom: '1px solid #eee',
     fontSize: '13px',
     outline: 'none',
+    // 📱 Mobile: Plus grand pour la lisibilité
+    '@media (max-width: 768px)': {
+      fontSize: '14px',
+      padding: '12px 15px',
+    },
   },
+
   conversationsList: {
     flex: 1,
     overflowY: 'auto',
+    // 📱 Mobile: Scroll optimisé
+    WebkitOverflowScrolling: 'touch', // 📱 Scroll smooth sur iOS
   },
+
   conversationItem: {
     display: 'flex',
     alignItems: 'center',
@@ -171,25 +201,47 @@ const styles = {
     cursor: 'pointer',
     borderBottom: '1px solid #f0f0f0',
     transition: 'background-color 0.2s',
+    // 📱 Mobile: Zone de touch plus grande
+    '@media (max-width: 768px)': {
+      padding: '14px 15px',
+      gap: '12px',
+    },
   },
+
   avatar: {
     width: '50px',
     height: '50px',
     borderRadius: '50%',
     objectFit: 'cover',
     flexShrink: 0,
+    // 📱 Mobile: Légèrement plus petit
+    '@media (max-width: 768px)': {
+      width: '45px',
+      height: '45px',
+    },
   },
+
   conversationInfo: {
     flex: 1,
-    minWidth: 0,
+    minWidth: 0, // 📱 Important pour l'ellipsis
     position: 'relative',
   },
+
   participantName: {
     display: 'block',
     fontSize: '13px',
     color: '#050505',
     marginBottom: '4px',
+    overflow: 'hidden', // 📱 Coupe le texte long
+    textOverflow: 'ellipsis', // 📱 Ajoute "..."
+    whiteSpace: 'nowrap', // 📱 Pas de retour à la ligne
+    // 📱 Mobile: Plus lisible
+    '@media (max-width: 768px)': {
+      fontSize: '14px',
+      fontWeight: '600',
+    },
   },
+
   lastMessage: {
     fontSize: '12px',
     color: '#65676b',
@@ -197,7 +249,12 @@ const styles = {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    // 📱 Mobile: Taille adaptée
+    '@media (max-width: 768px)': {
+      fontSize: '13px',
+    },
   },
+
   unreadBadge: {
     position: 'absolute',
     top: '10px',
@@ -212,24 +269,49 @@ const styles = {
     justifyContent: 'center',
     fontSize: '11px',
     fontWeight: 'bold',
+    // 📱 Mobile: Légèrement plus grand
+    '@media (max-width: 768px)': {
+      width: '22px',
+      height: '22px',
+      fontSize: '12px',
+      top: '12px',
+    },
   },
+
   loadingText: {
     padding: '20px',
     textAlign: 'center',
     color: '#999',
+    // 📱 Mobile: Ajusté
+    '@media (max-width: 768px)': {
+      fontSize: '14px',
+    },
   },
+
   emptyText: {
     padding: '20px',
     textAlign: 'center',
     color: '#999',
     fontSize: '13px',
+    // 📱 Mobile: Plus lisible
+    '@media (max-width: 768px)': {
+      fontSize: '14px',
+      padding: '30px 20px',
+    },
   },
+
   chatArea: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: '#fff',
+    // 📱 Mobile: Prend toute la hauteur restante
+    '@media (max-width: 768px)': {
+      width: '100%',
+      height: '100%',
+    },
   },
+
   emptyChat: {
     flex: 1,
     display: 'flex',
@@ -237,7 +319,12 @@ const styles = {
     justifyContent: 'center',
     color: '#999',
     fontSize: '16px',
+    padding: '20px', // 📱 Évite le texte collé aux bords
+    textAlign: 'center', // 📱 Centre le texte
+    // 📱 Mobile: Plus petit
+    '@media (max-width: 768px)': {
+      fontSize: '14px',
+    },
   },
 }
-
 export default Messages
