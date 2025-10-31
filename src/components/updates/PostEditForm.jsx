@@ -118,7 +118,7 @@ const PostEditForm = ({ post, onClose }) => {
                     className='remove-media-btn'
                     onClick={() => removeImage(i)}
                   >
-                    Delete
+                    🗑️
                   </button>
                 </div>
               ))}

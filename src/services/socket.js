@@ -99,6 +99,46 @@ class SocketService {
     this.socket?.off('user:status', callback)
   }
 
+  // 🆕 AJOUT: NOTIFICATIONS - Likes
+  onNotificationLike(callback) {
+    this.socket?.on('notification:new-like', callback)
+  }
+  offNotificationLike(callback) {
+    this.socket?.off('notification:new-like', callback)
+  }
+
+  // 🆕 AJOUT: NOTIFICATIONS - Commentaires
+  onNotificationComment(callback) {
+    this.socket?.on('notification:new-comment', callback)
+  }
+  offNotificationComment(callback) {
+    this.socket?.off('notification:new-comment', callback)
+  }
+
+  // 🆕 AJOUT: NOTIFICATIONS - Messages
+  onNotificationMessage(callback) {
+    this.socket?.on('notification:new-message', callback)
+  }
+  offNotificationMessage(callback) {
+    this.socket?.off('notification:new-message', callback)
+  }
+
+  // 🆕 AJOUT: NOTIFICATIONS - Demande d'ami
+  onNotificationFriendRequest(callback) {
+    this.socket?.on('notification:friend-request', callback)
+  }
+  offNotificationFriendRequest(callback) {
+    this.socket?.off('notification:friend-request', callback)
+  }
+
+  // 🆕 AJOUT: NOTIFICATIONS - Acceptation d'ami
+  onNotificationFriendAccepted(callback) {
+    this.socket?.on('notification:friend-accepted', callback)
+  }
+  offNotificationFriendAccepted(callback) {
+    this.socket?.off('notification:friend-accepted', callback)
+  }
+
   // --- AUTRES ---
   removeAllListeners() {
     this.socket?.removeAllListeners()

@@ -28,11 +28,11 @@ const Home = () => {
 
     const matchesPrice =
       !priceFilter ||
-      (priceFilter === 'low' && parseInt(post.price) < 1000) ||
+      (priceFilter === 'low' && parseInt(post.price) < 50000) ||
       (priceFilter === 'medium' &&
-        parseInt(post.price) >= 1000 &&
-        parseInt(post.price) < 3000) ||
-      (priceFilter === 'high' && parseInt(post.price) >= 3000)
+        parseInt(post.price) >= 50000 &&
+        parseInt(post.price) < 100000) ||
+      (priceFilter === 'high' && parseInt(post.price) >= 100000)
 
     return matchesSearch && matchesPrice
   })
@@ -58,7 +58,7 @@ const Home = () => {
                 onChange={(e) => dispatch(setSearchQuery(e.target.value))}
                 style={styles.searchInput}
               />
-              <button style={styles.searchButton}>Rechercher</button>
+              {/* <button style={styles.searchButton}>Rechercher</button> */}
             </div>
           </div>
         </div>
@@ -87,7 +87,7 @@ const Home = () => {
                 color: priceFilter === 'low' ? '#fff' : '#333',
               }}
             >
-              Moins de 1000 FCFA
+              Moins de 50 000 FCFA
             </button>
             <button
               onClick={() => setPriceFilter('medium')}
@@ -98,7 +98,7 @@ const Home = () => {
                 color: priceFilter === 'medium' ? '#fff' : '#333',
               }}
             >
-              1000 - 3000 FCFA
+              50 000 - 100 000 FCFA
             </button>
             <button
               onClick={() => setPriceFilter('high')}
@@ -108,7 +108,7 @@ const Home = () => {
                 color: priceFilter === 'high' ? '#fff' : '#333',
               }}
             >
-              3000+ FCFA
+              100 000+ FCFA
             </button>
           </div>
         </div>
@@ -161,11 +161,13 @@ const styles = {
     color: '#999',
   },
   hero: {
+    // backgroundImage:
+    //   'url(https://images.unsplash.com/photo-1545324418-cc1a9f4ef555?w=1200&h=400&fit=crop)'  https://plus.unsplash.com/premium_photo-1754269381929-d4a956e721fd?fm=jpg&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8RG91YWxhJTJDJTIwQ2FtZXJvb258ZW58MHx8MHx8fDA%3D&ixlib=rb-4.1.0&q=60&w=3000,
     backgroundImage:
-      'url(https://images.unsplash.com/photo-1545324418-cc1a9f4ef555?w=1200&h=400&fit=crop)',
+      'url(https://upload.wikimedia.org/wikipedia/commons/f/f0/Yaounde_Cameroon.jpg)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    height: '350px',
+    height: '400px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -269,7 +271,7 @@ const styles = {
     fontWeight: 'bold',
   },
   searchBarContainer: {
-    marginTop: '20px',
+    marginTop: '30px',
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
@@ -280,14 +282,14 @@ const styles = {
     alignItems: 'center',
     backgroundColor: '#fff',
     borderRadius: '12px',
-    padding: '8px',
+    padding: '18px',
     boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
     width: '90%',
     maxWidth: '600px',
   },
 
   searchIcon: {
-    fontSize: '18px',
+    fontSize: '20px',
     color: '#555',
     marginLeft: '10px',
     marginRight: '8px',

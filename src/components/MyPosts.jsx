@@ -46,9 +46,9 @@ const MyPosts = () => {
       ) : (
         <div style={styles.emptyState}>
           <p>Vous n'avez pas encore publié d'annonces.</p>
-          {/* <button onClick={() => navigate('/add')} style={styles.createBtn}>
-            📝 Créer une annonce
-          </button> */}
+          <button onClick={() => navigate('/add')} style={styles.createBtn}>
+            Créer une annonce
+          </button>
         </div>
       )}
     </div>
@@ -69,7 +69,7 @@ const styles = {
   },
   backBtn: {
     padding: '8px 16px',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#4833eeff',
     border: 'none',
     borderRadius: '6px',
     cursor: 'pointer',
@@ -84,14 +84,14 @@ const styles = {
   emptyState: {
     textAlign: 'center',
     padding: '40px 20px',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#c0c1c9ff',
     borderRadius: '12px',
     border: '1px solid #eee',
   },
   createBtn: {
     marginTop: '15px',
     padding: '10px 20px',
-    backgroundColor: '#1877f2',
+    backgroundColor: '#4833eeff',
     color: '#fff',
     border: 'none',
     borderRadius: '6px',

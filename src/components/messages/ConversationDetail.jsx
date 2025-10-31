@@ -9,10 +9,17 @@ import {
 import messagingService from '../../services/MessagingService'
 import { showNotification } from '../../reducers/notificationReducer'
 import socketService from '../../services/socket'
+import MediaUploader from '../media/MediaUploader'
+import MediaMessage from './MediaMessage'
 
-const ConversationDetail = ({ conversation }) => {
+const ConversationDetail = ({ conversation, onBack }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
+
+  // ✅ DEBUG: Vérifier si onBack existe
+  useEffect(() => {
+    console.log('🔍 ConversationDetail - onBack exists:', !!onBack)
+  }, [onBack])
   const [messageText, setMessageText] = useState('')
   const [loading, setLoading] = useState(false)
   const [editingMessage, setEditingMessage] = useState(null)
@@ -22,6 +29,9 @@ const ConversationDetail = ({ conversation }) => {
   const [deletingConv, setDeletingConv] = useState(false)
   const [typingUser, setTypingUser] = useState(null)
   const [isTyping, setIsTyping] = useState(false)
+  const [showMediaOptions, setShowMediaOptions] = useState(false)
+  const [uploadingMedia, setUploadingMedia] = useState(false)
+  const [isParticipantOnline, setIsParticipantOnline] = useState(false)
   const typingTimeoutRef = useRef(null)
   const messagesEndRef = useRef(null)
 
@@ -32,16 +42,14 @@ const ConversationDetail = ({ conversation }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  // ✅ CORRIGÉ: Gestion WebSocket pour cette conversation
+  // Gestion WebSocket
   useEffect(() => {
     if (!conversation?.id) return
 
     socketService.joinConversation(conversation.id)
 
-    // ✅ Handler pour les nouveaux messages
     const handleMessageReceive = ({ conversationId, message }) => {
       if (conversationId === conversation.id) {
-        // ✅ Vérifier si le message n'existe pas déjà (éviter les doublons)
         const messageExists = conversation.messages.some(
           (m) => m.id === message.id || m._id === message.id
         )
@@ -50,29 +58,24 @@ const ConversationDetail = ({ conversation }) => {
           dispatch(addMessage({ conversationId, message }))
         }
 
-        // Marquer comme lu si c'est l'autre utilisateur qui envoie
         if (message.senderId !== user.id) {
           messagingService.markMessagesAsRead(conversationId)
         }
       }
     }
 
-    // ✅ Handler pour les messages modifiés
     const handleMessageUpdated = ({ conversationId, messageId, text }) => {
       if (conversationId === conversation.id) {
         const updated = {
           ...conversation,
           messages: conversation.messages.map((m) =>
-            m.id === messageId
-              ? { ...m, text, updatedAt: new Date().toISOString() }
-              : m
+            m.id === messageId ? { ...m, text, updatedAt: new Date() } : m
           ),
         }
         dispatch(updateConversation(updated))
       }
     }
 
-    // ✅ Handler pour les messages supprimés
     const handleMessageDeleted = ({ conversationId, messageId }) => {
       if (conversationId === conversation.id) {
         const updated = {
@@ -83,7 +86,6 @@ const ConversationDetail = ({ conversation }) => {
       }
     }
 
-    // ✅ Handler pour "en train d'écrire"
     const handleTypingUpdate = ({
       conversationId,
       userId,
@@ -95,24 +97,34 @@ const ConversationDetail = ({ conversation }) => {
       }
     }
 
-    // Attacher les listeners
+    const handleUserStatus = ({ userId, status }) => {
+      if (userId === conversation.participantId) {
+        setIsParticipantOnline(status === 'online')
+      }
+    }
+
     socketService.onMessageReceive(handleMessageReceive)
     socketService.onMessageUpdated(handleMessageUpdated)
     socketService.onMessageDeleted(handleMessageDeleted)
     socketService.onTypingUpdate(handleTypingUpdate)
+    socketService.onUserStatus(handleUserStatus)
 
-    // ✅ IMPORTANT: Nettoyage complet
     return () => {
       socketService.leaveConversation(conversation.id)
-      // Retirer TOUS les listeners pour éviter les doublons
       socketService.offMessageReceive()
       socketService.offMessageUpdated()
       socketService.offMessageDeleted()
       socketService.offTypingUpdate()
+      socketService.offUserStatus()
     }
-  }, [conversation?.id, dispatch, user.id, conversation.messages])
+  }, [
+    conversation?.id,
+    dispatch,
+    user.id,
+    conversation.messages,
+    conversation.participantId,
+  ])
 
-  // Gérer l'indicateur "en train d'écrire"
   const handleTyping = (e) => {
     setMessageText(e.target.value)
 
@@ -135,7 +147,6 @@ const ConversationDetail = ({ conversation }) => {
     }, 2000)
   }
 
-  // ✅ CORRIGÉ: Envoi d'un message SANS ajout local temporaire
   const handleSendMessage = async (e) => {
     e.preventDefault()
     if (!messageText.trim()) return
@@ -144,13 +155,11 @@ const ConversationDetail = ({ conversation }) => {
     const messageToSend = messageText.trim()
 
     try {
-      // Arrêter l'indicateur "en train d'écrire"
       if (isTyping) {
         socketService.stopTyping(conversation.id, user.id)
         setIsTyping(false)
       }
 
-      // ✅ Envoyer au backend - le WebSocket s'occupera de l'affichage
       await messagingService.addMessage(conversation.id, messageToSend)
 
       setMessageText('')
@@ -163,7 +172,40 @@ const ConversationDetail = ({ conversation }) => {
     }
   }
 
-  // Supprimer un message
+  const handleMediaUpload = async (mediaUrl, mediaType) => {
+    try {
+      setUploadingMedia(true)
+
+      let type = 'document'
+      let name = 'file'
+
+      if (mediaType === 'image/*') {
+        type = 'image'
+        name = 'image.jpg'
+      } else if (mediaType === 'video/*') {
+        type = 'video'
+        name = 'video.mp4'
+      }
+
+      await messagingService.addMessage(
+        conversation.id,
+        messageText.trim() || '',
+        type,
+        mediaUrl,
+        name
+      )
+
+      setMessageText('')
+      setShowMediaOptions(false)
+      dispatch(showNotification('success: Média envoyé avec succès !', 3))
+    } catch (error) {
+      console.error('Erreur envoi média:', error)
+      dispatch(showNotification("Error: Échec de l'envoi du média", 5))
+    } finally {
+      setUploadingMedia(false)
+    }
+  }
+
   const handleDeleteMessage = async (messageId) => {
     try {
       await messagingService.deleteMessage(conversation.id, messageId)
@@ -174,7 +216,6 @@ const ConversationDetail = ({ conversation }) => {
     }
   }
 
-  // Modifier un message
   const handleEditMessage = async (messageId, newText) => {
     try {
       await messagingService.updateMessage(conversation.id, messageId, newText)
@@ -185,7 +226,6 @@ const ConversationDetail = ({ conversation }) => {
     }
   }
 
-  // Suppression d'une conversation
   const handleDeleteConversation = async () => {
     const confirmDelete = window.confirm(
       'Voulez-vous vraiment supprimer cette conversation ?'
@@ -194,12 +234,15 @@ const ConversationDetail = ({ conversation }) => {
 
     try {
       setDeletingConv(true)
-
       await messagingService.deleteConversationForUser(conversation.id)
-
       const updatedList = await messagingService.getUserConversations()
       dispatch(setConversations(updatedList))
       dispatch(setActiveConversation(null))
+
+      // ✅ Si onBack existe, l'appeler après suppression
+      if (onBack) {
+        onBack()
+      }
 
       dispatch(
         showNotification('success: Conversation supprimée avec succès', 3)
@@ -214,17 +257,36 @@ const ConversationDetail = ({ conversation }) => {
 
   return (
     <div style={styles.container}>
-      {/* En-tête */}
-      <div style={styles.header}>
-        <img
-          src={
-            conversation.participantAvatar ||
-            'https://ui-avatars.com/api/?name=User'
-          }
-          alt='avatar'
-          style={styles.headerAvatar}
-        />
-        <h3 style={styles.headerTitle}>{conversation.participantName}</h3>
+      {/* En-tête avec bouton retour */}
+      <div style={styles.hero}>
+        {onBack && (
+          <button
+            onClick={onBack}
+            style={styles.backButton}
+            aria-label='Retour'
+          >
+            🡰
+          </button>
+        )}
+
+        <div style={styles.avatarContainer}>
+          <img
+            src={
+              conversation.participantAvatar ||
+              'https://ui-avatars.com/api/?name=User'
+            }
+            alt='avatar'
+            style={styles.headerAvatar}
+          />
+          {isParticipantOnline && <span style={styles.onlineIndicator} />}
+        </div>
+
+        <div style={styles.headerInfo}>
+          <h3 style={styles.headerTitle}>{conversation.participantName}</h3>
+          <span style={styles.statusText}>
+            {isParticipantOnline ? 'En ligne' : 'Hors ligne'}
+          </span>
+        </div>
 
         <button
           onClick={handleDeleteConversation}
@@ -234,8 +296,9 @@ const ConversationDetail = ({ conversation }) => {
             opacity: deletingConv ? 0.6 : 1,
             cursor: deletingConv ? 'not-allowed' : 'pointer',
           }}
+          aria-label='Supprimer la conversation'
         >
-          {deletingConv ? 'Suppression...' : 'Supprimer'}
+          🗑️
         </button>
       </div>
 
@@ -300,7 +363,17 @@ const ConversationDetail = ({ conversation }) => {
                   </div>
                 )}
 
-                <p style={styles.messageText}>{msg.text}</p>
+                {msg.mediaType && msg.mediaUrl ? (
+                  <MediaMessage
+                    mediaType={msg.mediaType}
+                    mediaUrl={msg.mediaUrl}
+                    mediaName={msg.mediaName}
+                    text={msg.text}
+                  />
+                ) : (
+                  <p style={styles.messageText}>{msg.text}</p>
+                )}
+
                 <small style={styles.messageTime}>
                   {new Date(msg.createdAt).toLocaleTimeString('fr-FR', {
                     hour: '2-digit',
@@ -313,7 +386,6 @@ const ConversationDetail = ({ conversation }) => {
           ))
         )}
 
-        {/* Indicateur "en train d'écrire" */}
         {typingUser && (
           <div style={styles.typingIndicator}>
             <em>{typingUser} est en train d'écrire...</em>
@@ -323,29 +395,70 @@ const ConversationDetail = ({ conversation }) => {
         <div ref={messagesEndRef} />
       </div>
 
+      {showMediaOptions && (
+        <div style={styles.mediaOptionsContainer}>
+          <div style={styles.mediaOption}>
+            <span>📷 Image</span>
+            <MediaUploader
+              onUploadComplete={(url) => handleMediaUpload(url, 'image/*')}
+              setIsUploading={setUploadingMedia}
+              maxFiles={1}
+              accept='image/*'
+            />
+          </div>
+          <div style={styles.mediaOption}>
+            <span>🎥 Vidéo</span>
+            <MediaUploader
+              onUploadComplete={(url) => handleMediaUpload(url, 'video/*')}
+              setIsUploading={setUploadingMedia}
+              maxFiles={1}
+              accept='video/*'
+            />
+          </div>
+          {/* <div style={styles.mediaOption}>
+            <span>📄 Document</span>
+            <MediaUploader
+              onUploadComplete={(url) => handleMediaUpload(url, '*')}
+              setIsUploading={setUploadingMedia}
+              maxFiles={1}
+              accept='*'
+            />
+          </div> */}
+        </div>
+      )}
+
       {/* Formulaire d'envoi */}
       <form onSubmit={handleSendMessage} style={styles.form}>
+        <button
+          type='button'
+          onClick={() => setShowMediaOptions(!showMediaOptions)}
+          style={styles.attachButton}
+          disabled={uploadingMedia}
+        >
+          files
+        </button>
+
         <input
           type='text'
           value={messageText}
           onChange={handleTyping}
           placeholder='Écrivez un message...'
-          disabled={loading}
+          disabled={loading || uploadingMedia}
           style={styles.input}
         />
         <button
           type='submit'
-          disabled={loading || !messageText.trim()}
+          disabled={loading || uploadingMedia || !messageText.trim()}
           style={{
             ...styles.sendBtn,
-            opacity: loading || !messageText.trim() ? 0.5 : 1,
+            opacity: loading || uploadingMedia || !messageText.trim() ? 0.5 : 1,
           }}
         >
-          {loading ? '...' : 'Envoyer'}
+          {loading || uploadingMedia ? '...' : 'Envoyer'}
         </button>
       </form>
 
-      {/* Modale suppression */}
+      {/* Modales */}
       {showDeleteModal && messageToDelete && (
         <div style={styles.modalOverlay}>
           <div style={styles.modal}>
@@ -372,7 +485,6 @@ const ConversationDetail = ({ conversation }) => {
         </div>
       )}
 
-      {/* Modale édition */}
       {editingMessage && (
         <div style={styles.modalOverlay}>
           <div style={styles.modal}>
@@ -413,49 +525,70 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    // 📱 Mobile: Prend toute la hauteur
-    maxHeight: 'calc(100vh - 60px)',
+    width: '100%',
+    backgroundColor: '#fff',
   },
-
-  header: {
+  hero: {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
-    padding: '15px',
-    borderBottom: '1px solid #eee',
-    backgroundColor: '#fff',
-    // 📱 Mobile: Réduit le padding
-    '@media (max-width: 768px)': {
-      padding: '10px',
-      gap: '8px',
-    },
+    padding: '12px 15px',
+    backgroundColor: '#1877f2',
+    borderBottom: '1px solid #e0e0e0',
+    position: 'relative', // ✅ Permet d'utiliser le z-index
+    zIndex: 2, // ✅ S’assure que ce soit visible au-dessus des autres éléments
+    marginTop: '70px', // ✅ Ajuste cette valeur selon la hauteur de ta navbar
   },
 
+  backButton: {
+    backgroundColor: 'transparent',
+    border: 'none',
+    color: '#fff',
+    fontSize: '20px',
+    cursor: 'pointer',
+    padding: '5px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    lineHeight: 1,
+  },
+  avatarContainer: {
+    position: 'relative',
+  },
   headerAvatar: {
     width: '40px',
     height: '40px',
     borderRadius: '50%',
-    // 📱 Mobile: Plus petit
-    '@media (max-width: 768px)': {
-      width: '35px',
-      height: '35px',
-    },
   },
-
+  onlineIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: '12px',
+    height: '12px',
+    backgroundColor: '#44b700',
+    border: '2px solid #fff',
+    borderRadius: '50%',
+  },
+  headerInfo: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2px',
+    flex: 1,
+  },
   headerTitle: {
     margin: 0,
     fontSize: '16px',
     fontWeight: 'bold',
-    flex: 1, // 📱 Prend l'espace restant
-    overflow: 'hidden', // 📱 Évite le débordement
-    textOverflow: 'ellipsis', // 📱 Ajoute "..."
-    whiteSpace: 'nowrap', // 📱 Pas de retour à la ligne
-    // 📱 Mobile: Plus petit
-    '@media (max-width: 768px)': {
-      fontSize: '14px',
-    },
+    color: '#fff',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
-
+  statusText: {
+    fontSize: '12px',
+    color: 'rgba(255, 255, 255, 0.8)',
+  },
   messagesContainer: {
     flex: 1,
     overflowY: 'auto',
@@ -463,83 +596,50 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '10px',
-    backgroundColor: '#fff',
-    // 📱 Mobile: Réduit le padding
-    '@media (max-width: 768px)': {
-      padding: '10px',
-      gap: '8px',
-    },
+    backgroundColor: '#f5f5f5',
   },
-
-  messageWrapper: {
-    display: 'flex',
-    // 📱 Mobile: Adapté automatiquement
-  },
-
+  messageWrapper: { display: 'flex' },
   message: {
-    maxWidth: '60%', // 📱 60% sur desktop
+    maxWidth: '60%',
     padding: '10px 12px',
     borderRadius: '18px',
     wordWrap: 'break-word',
     position: 'relative',
-    // 📱 Mobile: Prend plus d'espace
-    '@media (max-width: 768px)': {
-      maxWidth: '75%',
-      padding: '8px 10px',
-      fontSize: '14px',
-    },
   },
-
   messageText: {
     margin: 0,
     fontSize: '13px',
-    wordBreak: 'break-word', // 📱 Coupe les longs mots
-    // 📱 Mobile: Légèrement plus petit
-    '@media (max-width: 768px)': {
-      fontSize: '13px',
-    },
+    wordBreak: 'break-word',
   },
-
   messageTime: {
     fontSize: '11px',
     opacity: 0.7,
-    display: 'block', // 📱 Force un retour à la ligne
+    display: 'block',
     marginTop: '4px',
-    // 📱 Mobile: Plus petit
-    '@media (max-width: 768px)': {
-      fontSize: '10px',
-    },
   },
-
   form: {
     display: 'flex',
     gap: '8px',
     padding: '15px',
     borderTop: '1px solid #eee',
-    backgroundColor: '#f9f9f9',
-    // 📱 Mobile: Réduit le padding et adapte les gaps
-    '@media (max-width: 768px)': {
-      padding: '10px',
-      gap: '6px',
-      position: 'sticky', // 📱 Reste en bas
-      bottom: 0,
-    },
+    backgroundColor: '#fff',
   },
-
+  attachButton: {
+    padding: '5px',
+    backgroundColor: 'transparent',
+    border: 'none',
+    fontSize: '20px',
+    cursor: 'pointer',
+    //marginTop: '0.0001px',
+  },
   input: {
     flex: 1,
     padding: '10px 15px',
     border: '1px solid #ddd',
     borderRadius: '20px',
-    fontSize: '13px',
+    fontSize: '14px',
     outline: 'none',
-    // 📱 Mobile: Ajuste le padding
-    '@media (max-width: 768px)': {
-      padding: '8px 12px',
-      fontSize: '14px', // 📱 Plus lisible sur mobile
-    },
   },
-
   sendBtn: {
     padding: '10px 20px',
     backgroundColor: '#1877f2',
@@ -549,61 +649,45 @@ const styles = {
     fontSize: '13px',
     fontWeight: 'bold',
     cursor: 'pointer',
-    // 📱 Mobile: Bouton plus compact
-    '@media (max-width: 768px)': {
-      padding: '8px 16px',
-      fontSize: '13px',
-    },
   },
-
+  mediaOptionsContainer: {
+    display: 'flex',
+    gap: '10px',
+    padding: '10px 15px',
+    backgroundColor: '#f5f5f5',
+    borderTop: '1px solid #ddd',
+  },
+  mediaOption: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '5px',
+    fontSize: '12px',
+  },
   typingIndicator: {
     padding: '8px 12px',
     fontSize: '13px',
     color: '#65676b',
     fontStyle: 'italic',
-    // 📱 Mobile: Plus petit
-    '@media (max-width: 768px)': {
-      fontSize: '12px',
-      padding: '6px 10px',
-    },
   },
-
   emptyMessages: {
     textAlign: 'center',
     padding: '40px',
     color: '#999',
-    // 📱 Mobile: Moins de padding
-    '@media (max-width: 768px)': {
-      padding: '20px',
-      fontSize: '14px',
-    },
   },
-
   menuWrapper: {
     position: 'absolute',
     top: '-5px',
     right: '-5px',
-    // 📱 Mobile: Zone de touch plus grande
-    '@media (max-width: 768px)': {
-      top: '-8px',
-      right: '-8px',
-    },
   },
-
   menuButton: {
     background: 'none',
     border: 'none',
     color: '#fff',
     fontSize: '18px',
     cursor: 'pointer',
-    padding: '5px', // 📱 Zone de touch plus grande
-    // 📱 Mobile: Plus gros pour le touch
-    '@media (max-width: 768px)': {
-      fontSize: '20px',
-      padding: '8px',
-    },
+    padding: '5px',
   },
-
   dropdownMenu: {
     position: 'absolute',
     top: '25px',
@@ -615,14 +699,8 @@ const styles = {
     flexDirection: 'column',
     overflow: 'hidden',
     zIndex: 10,
-    minWidth: '120px', // 📱 Largeur minimale
-    // 📱 Mobile: Plus visible
-    '@media (max-width: 768px)': {
-      minWidth: '140px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-    },
+    minWidth: '120px',
   },
-
   dropdownItem: {
     padding: '8px 12px',
     background: 'none',
@@ -631,13 +709,7 @@ const styles = {
     cursor: 'pointer',
     fontSize: '13px',
     transition: 'background 0.2s',
-    // 📱 Mobile: Plus d'espace pour touch
-    '@media (max-width: 768px)': {
-      padding: '12px 16px',
-      fontSize: '14px',
-    },
   },
-
   modalOverlay: {
     position: 'fixed',
     top: 0,
@@ -649,88 +721,55 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 999,
-    // 📱 Mobile: Ajuste pour l'écran complet
-    padding: '20px', // 📱 Évite que la modal touche les bords
+    padding: '20px',
   },
-
   modal: {
     backgroundColor: '#fff',
     borderRadius: '10px',
     padding: '20px',
-    width: '300px',
-    maxWidth: '90%', // 📱 Ne dépasse pas 90% de l'écran
+    width: '90%',
+    maxWidth: '340px',
     boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
     textAlign: 'center',
-    // 📱 Mobile: S'adapte mieux
-    '@media (max-width: 768px)': {
-      width: '100%',
-      maxWidth: '340px',
-      padding: '20px 15px',
-    },
   },
-
   modalActions: {
     marginTop: '15px',
     display: 'flex',
     justifyContent: 'space-around',
-    gap: '10px', // 📱 Espace entre les boutons
-    // 📱 Mobile: Boutons en colonne si nécessaire
-    '@media (max-width: 480px)': {
-      flexDirection: 'column',
-      gap: '8px',
-    },
+    gap: '10px',
   },
-
   modalBtn: {
     color: '#fff',
     border: 'none',
     borderRadius: '6px',
-    padding: '8px 14px',
+    padding: '10px 16px',
     cursor: 'pointer',
-    flex: 1, // 📱 Prend la même largeur
-    minWidth: '80px', // 📱 Largeur minimale
-    // 📱 Mobile: Plus grand pour le touch
-    '@media (max-width: 768px)': {
-      padding: '10px 16px',
-      fontSize: '14px',
-    },
+    fontSize: '14px',
   },
-
   textarea: {
     width: '100%',
-    height: '80px',
-    padding: '8px',
+    height: '100px',
+    padding: '10px',
     borderRadius: '6px',
     border: '1px solid #ccc',
-    fontSize: '13px',
+    fontSize: '14px',
     resize: 'none',
-    boxSizing: 'border-box', // 📱 Inclut le padding dans la largeur
-    fontFamily: 'inherit', // 📱 Utilise la même police
-    // 📱 Mobile: Plus grand et lisible
-    '@media (max-width: 768px)': {
-      height: '100px',
-      fontSize: '14px',
-      padding: '10px',
-    },
+    boxSizing: 'border-box',
+    fontFamily: 'inherit',
   },
-
   deleteConvBtn: {
-    marginLeft: 'auto',
-    backgroundColor: '#ff4d4f',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     color: '#fff',
     border: 'none',
-    borderRadius: '10px',
-    padding: '6px 12px',
+    borderRadius: '50%',
+    width: '36px',
+    height: '36px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     cursor: 'pointer',
-    fontSize: '12px',
-    fontWeight: 'bold',
-    transition: 'background 0.2s',
-    whiteSpace: 'nowrap', // 📱 Pas de retour à la ligne
-    // 📱 Mobile: Plus compact
-    '@media (max-width: 768px)': {
-      fontSize: '11px',
-      padding: '5px 10px',
-    },
+    fontSize: '16px',
+    flexShrink: 0,
   },
 }
 

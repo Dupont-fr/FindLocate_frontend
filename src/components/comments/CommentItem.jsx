@@ -146,7 +146,7 @@ const CommentItem = ({ comment, postId, currentUser, onEdit, onDelete }) => {
                     }}
                     style={styles.menuItem}
                   >
-                    ✏️ Modifier
+                    Modifier
                   </button>
                   <button
                     onClick={() => {
@@ -155,7 +155,7 @@ const CommentItem = ({ comment, postId, currentUser, onEdit, onDelete }) => {
                     }}
                     style={{ ...styles.menuItem, color: '#d32f2f' }}
                   >
-                    🗑️ Supprimer
+                    Supprimer
                   </button>
                 </div>
               )}

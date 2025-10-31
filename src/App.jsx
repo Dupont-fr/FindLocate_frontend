@@ -26,6 +26,7 @@ import VerifyResetCode from './components/utils/VerifyResetCode'
 import './components/utils/auth-styles.css'
 import { useEffect } from 'react'
 import socketService from './services/socket'
+import NotificationBadge from './components/messages/NotificationBadge'
 
 const App = () => {
   const { user, isAuthenticated } = useSelector((state) => state.auth)
@@ -73,7 +74,7 @@ const App = () => {
                 <Link to='/messages' className='nav-link'>
                   💬 Messages
                 </Link>
-                <AccountMenu />
+                <NotificationBadge /> <AccountMenu />
               </>
             )}
           </div>
@@ -137,6 +138,7 @@ const App = () => {
           <Route path='/verify-email-code' element={<VerifyEmailCode />} />
           <Route path='/forgot-password' element={<ForgotPassword />} />
           <Route path='/verify-reset-code' element={<VerifyResetCode />} />
+          <Route path='/NotificationBadge' element={<NotificationBadge />} />
         </Routes>
       </div>
     </Router>

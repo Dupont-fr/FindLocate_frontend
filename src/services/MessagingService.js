@@ -68,13 +68,20 @@ const createConversation = async (user2Id, user2Name, user2Avatar) => {
 
 /**
  * Ajouter un message à une conversation
- * ✅ MODIFIÉ: Envoie seulement le texte - le backend crée l'objet message complet
+ * ✅ MODIFIÉ: Support des médias (images, vidéos, documents)
  */
-const addMessage = async (conversationId, text) => {
+const addMessage = async (
+  conversationId,
+  text,
+  mediaType = null,
+  mediaUrl = '',
+  mediaName = '',
+  mediaSize = 0
+) => {
   try {
     const response = await axios.post(
       `${API_URL}/${conversationId}/messages`,
-      { text },
+      { text, mediaType, mediaUrl, mediaName, mediaSize },
       getConfig()
     )
     return response.data
