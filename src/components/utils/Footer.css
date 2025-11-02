@@ -1,0 +1,373 @@
+/* 🆕 Footer principal */
+.footer {
+  background-color: #1a1a1a;
+  color: #fff;
+  margin-top: 60px;
+}
+
+.footer-main {
+  padding: 60px 20px 40px;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+}
+
+/* 🆕 Sections du footer */
+.footer-section {
+  min-width: 0;
+}
+
+.footer-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: default;
+}
+
+.footer-toggle {
+  display: none;
+  font-size: 24px;
+  font-weight: 300;
+  color: #1877f2;
+}
+
+.footer-description {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #b3b3b3;
+  margin-bottom: 20px;
+}
+
+/* 🆕 Réseaux sociaux */
+.footer-social {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.footer-social a {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #b3b3b3;
+  transition: all 0.3s ease;
+}
+
+.footer-social a:hover {
+  background-color: #1877f2;
+  color: #fff;
+  transform: translateY(-3px);
+}
+
+/* 🆕 Liens du footer */
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  color: #b3b3b3;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s ease;
+  display: inline-block;
+}
+
+.footer-links a:hover {
+  color: #1877f2;
+  padding-left: 5px;
+}
+
+/* 🆕 Contact */
+.footer-contact {
+  font-size: 14px;
+}
+
+.footer-contact p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: #b3b3b3;
+}
+
+.contact-icon {
+  font-size: 18px;
+}
+
+.footer-contact a {
+  color: #b3b3b3;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-contact a:hover {
+  color: #1877f2;
+}
+
+/* 🆕 Footer bottom */
+.footer-bottom {
+  border-top: 1px solid #2a2a2a;
+  padding: 20px;
+  background-color: #0f0f0f;
+}
+
+.footer-bottom-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-copyright {
+  font-size: 14px;
+  color: #b3b3b3;
+  margin: 0;
+}
+
+.footer-bottom-links {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.footer-bottom-links a {
+  color: #b3b3b3;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.footer-bottom-links a:hover {
+  color: #1877f2;
+}
+
+.separator {
+  color: #4a4a4a;
+}
+
+/* 🆕 RESPONSIVE - TABLET (max-width: 768px) */
+@media (max-width: 768px) {
+  .footer-main {
+    padding: 40px 20px 30px;
+  }
+
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+
+  .footer-title {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+
+  .footer-social {
+    gap: 12px;
+  }
+
+  .footer-social a {
+    width: 36px;
+    height: 36px;
+  }
+
+  .footer-bottom-content {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* 🆕 RESPONSIVE - MOBILE (max-width: 480px) */
+@media (max-width: 480px) {
+  .footer-main {
+    padding: 30px 16px 20px;
+  }
+
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  /* 🆕 Sections accordéon sur mobile */
+  .footer-section {
+    border-bottom: 1px solid #2a2a2a;
+    padding: 20px 0;
+  }
+
+  .footer-section:last-child {
+    border-bottom: none;
+  }
+
+  .footer-title {
+    font-size: 16px;
+    margin-bottom: 0;
+    cursor: pointer;
+    padding: 4px 0;
+    user-select: none;
+  }
+
+  .footer-toggle {
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  /* 🆕 Contenu caché par défaut sur mobile */
+  .footer-content,
+  .footer-links {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  /* 🆕 Contenu visible quand ouvert */
+  .footer-content.open,
+  .footer-links.open {
+    max-height: 1000px;
+    margin-top: 16px;
+  }
+
+  /* 🆕 Description plus courte sur mobile */
+  .footer-description {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* 🆕 Réseaux sociaux centrés sur mobile */
+  .footer-social {
+    justify-content: center;
+    margin-top: 16px;
+  }
+
+  .footer-social a {
+    width: 38px;
+    height: 38px;
+  }
+
+  /* 🆕 Liens plus espacés sur mobile */
+  .footer-links li {
+    margin-bottom: 14px;
+  }
+
+  .footer-links a {
+    font-size: 15px;
+    display: block;
+    padding: 4px 0;
+  }
+
+  /* 🆕 Contact adapté mobile */
+  .footer-contact p {
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+
+  /* 🆕 Footer bottom responsive */
+  .footer-bottom {
+    padding: 16px;
+  }
+
+  .footer-bottom-content {
+    gap: 12px;
+  }
+
+  .footer-copyright {
+    font-size: 12px;
+  }
+
+  .footer-bottom-links {
+    font-size: 12px;
+    gap: 12px;
+  }
+
+  .footer-bottom-links a {
+    font-size: 12px;
+  }
+}
+
+/* 🆕 RESPONSIVE - TRÈS PETIT MOBILE (max-width: 360px) */
+@media (max-width: 360px) {
+  .footer-main {
+    padding: 20px 12px 16px;
+  }
+
+  .footer-section {
+    padding: 16px 0;
+  }
+
+  .footer-title {
+    font-size: 15px;
+  }
+
+  .footer-description {
+    font-size: 12px;
+  }
+
+  .footer-social a {
+    width: 36px;
+    height: 36px;
+  }
+
+  .footer-contact p {
+    font-size: 13px;
+  }
+
+  .footer-bottom {
+    padding: 12px;
+  }
+
+  .footer-copyright,
+  .footer-bottom-links a {
+    font-size: 11px;
+  }
+}
+
+/* 🆕 Animation smooth pour l'accordéon */
+@media (max-width: 480px) {
+  .footer-title.active .footer-toggle {
+    transform: rotate(180deg);
+  }
+}
+
+/* 🆕 Amélioration de l'accessibilité */
+.footer a:focus,
+.footer button:focus {
+  outline: 2px solid #1877f2;
+  outline-offset: 2px;
+}
+
+/* 🆕 Mode sombre amélioré */
+@media (prefers-color-scheme: dark) {
+  .footer {
+    background-color: #0a0a0a;
+  }
+
+  .footer-main {
+    background-color: #0a0a0a;
+  }
+
+  .footer-bottom {
+    background-color: #000;
+    border-top-color: #1a1a1a;
+  }
+}

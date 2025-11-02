@@ -1,0 +1,493 @@
+/* Admin Container */
+.admin-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}
+
+.admin-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.admin-header h1 {
+  margin: 0 0 10px 0;
+  font-size: 32px;
+}
+
+.admin-header p {
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* Onglets */
+.admin-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.admin-tabs button {
+  padding: 12px 24px;
+  background-color: white;
+  border: 2px solid #e1e4e8;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.admin-tabs button.active {
+  background-color: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+/* Cartes de statistiques */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.stat-number {
+  font-size: 36px;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #667eea;
+}
+
+.stat-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 10px 0;
+  color: #333;
+}
+
+.stat-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: #e7f3ff;
+  color: #667eea;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Graphiques */
+.chart-container {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.chart-container h3 {
+  margin: 0 0 20px 0;
+  color: #333;
+}
+
+.charts-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+}
+
+/* Tableaux */
+.admin-table {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.admin-table h2 {
+  margin: 0 0 20px 0;
+  color: #333;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background-color: #f8f9fa;
+}
+
+th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #666;
+  border-bottom: 2px solid #e1e4e8;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.user-avatar,
+.post-thumbnail {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.post-thumbnail {
+  border-radius: 8px;
+}
+
+.role-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.role-badge.admin {
+  background-color: #ff4444;
+  color: white;
+}
+
+.role-badge.user {
+  background-color: #4caf50;
+  color: white;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.active {
+  background-color: #4caf50;
+  color: white;
+}
+
+.status-badge.inactive {
+  background-color: #999;
+  color: white;
+}
+
+.type-badge {
+  padding: 4px 12px;
+  background-color: #667eea;
+  color: white;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.btn-delete {
+  padding: 8px 16px;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.btn-delete:hover {
+  background-color: #cc0000;
+}
+
+/* Loading & Error */
+.admin-loading,
+.admin-error {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 18px;
+  color: #666;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-container {
+    padding: 10px;
+  }
+
+  .admin-header {
+    padding: 20px;
+  }
+
+  .admin-header h1 {
+    font-size: 24px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-tabs {
+    flex-direction: column;
+  }
+
+  .admin-tabs button {
+    width: 100%;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  th,
+  td {
+    padding: 8px 4px;
+  }
+}
+
+/* 🆕 AJOUT: Styles pour les nouvelles fonctionnalités */
+
+/* Header avec boutons d'export */
+.admin-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.admin-export-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-export {
+  padding: 10px 20px;
+  background-color: white;
+  color: #667eea;
+  border: 2px solid white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+
+.btn-export:hover:not(:disabled) {
+  background-color: transparent;
+  color: white;
+}
+
+.btn-export:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Cartes mises en évidence */
+.highlight-card {
+  background: linear-gradient(135deg, #667eea22 0%, #764ba222 100%);
+  border: 2px solid #667eea;
+}
+
+.stat-details {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.stat-badge-danger {
+  background-color: #ff4444;
+  color: white;
+}
+
+/* Bouton voir */
+.btn-view {
+  padding: 8px 16px;
+  background-color: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.btn-view:hover {
+  background-color: #0c5bbd;
+}
+
+/* Empty state */
+.admin-empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.admin-empty-state p {
+  font-size: 18px;
+  color: #666;
+  margin: 0;
+}
+
+/* Amélioration des tableaux */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+thead {
+  background-color: #f8f9fa;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+th {
+  padding: 14px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #e1e4e8;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #e1e4e8;
+  vertical-align: middle;
+}
+
+tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Responsive amélioré */
+@media (max-width: 1200px) {
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-export-buttons {
+    width: 100%;
+  }
+
+  .btn-export {
+    flex: 1;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-details {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  /* Tables responsives */
+  .admin-table {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 800px;
+  }
+
+  th,
+  td {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+
+  .user-avatar,
+  .post-thumbnail {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-header h1 {
+    font-size: 22px;
+  }
+
+  .admin-tabs button {
+    font-size: 13px;
+    padding: 10px 16px;
+  }
+
+  .stat-number {
+    font-size: 28px;
+  }
+
+  .btn-delete,
+  .btn-view {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+
+/* Animation de chargement */
+.admin-loading {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 18px;
+  color: #666;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

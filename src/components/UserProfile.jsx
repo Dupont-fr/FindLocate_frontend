@@ -94,8 +94,6 @@ const UserProfile = () => {
         </div>
       </div>
 
-      {/* ======= BOUTONS POUR L'UTILISATEUR CONNECTÉ ======= */}
-
       {/* ======= LISTE DES POSTS ======= */}
       <h3>📢 Publications de {user.firstName}</h3>
       {userPosts.length > 0 ? (

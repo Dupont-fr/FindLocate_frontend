@@ -1,0 +1,407 @@
+/* Styles communs pour FAQ, Contact et Privacy */
+
+/* FAQ Styles */
+.faq-container,
+.contact-container,
+.privacy-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.faq-header,
+.contact-header,
+.privacy-header {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.faq-back-btn,
+.contact-back-btn,
+.privacy-back-btn {
+  padding: 8px 16px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 20px;
+  transition: background-color 0.2s;
+}
+
+.faq-back-btn:hover,
+.contact-back-btn:hover,
+.privacy-back-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.faq-header h1,
+.contact-header h1,
+.privacy-header h1 {
+  margin: 0 0 10px 0;
+  font-size: 32px;
+  color: #222;
+}
+
+.faq-subtitle,
+.contact-subtitle {
+  color: #666;
+  font-size: 16px;
+  margin: 0;
+}
+
+.privacy-last-update {
+  color: #999;
+  font-size: 14px;
+  margin: 10px 0 0 0;
+}
+
+/* FAQ Content */
+.faq-content,
+.privacy-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.faq-category {
+  margin-bottom: 40px;
+}
+
+.category-title {
+  font-size: 22px;
+  color: #1877f2;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #1877f2;
+}
+
+.faq-item {
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.faq-item:hover {
+  border-color: #1877f2;
+  box-shadow: 0 2px 8px rgba(24, 119, 242, 0.1);
+}
+
+.faq-item.open {
+  border-color: #1877f2;
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.faq-question h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+  flex: 1;
+}
+
+.faq-icon {
+  font-size: 24px;
+  color: #1877f2;
+  font-weight: 300;
+  min-width: 30px;
+  text-align: center;
+}
+
+.faq-answer {
+  padding: 0 20px 20px 20px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.faq-answer p {
+  margin: 0;
+  color: #555;
+  line-height: 1.7;
+}
+
+.faq-contact {
+  background-color: #f0f8ff;
+  padding: 40px;
+  border-radius: 12px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.faq-contact h3 {
+  margin: 0 0 10px 0;
+  color: #222;
+}
+
+.faq-contact p {
+  color: #666;
+  margin: 0 0 20px 0;
+}
+
+.contact-btn {
+  padding: 12px 30px;
+  background-color: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.contact-btn:hover {
+  background-color: #0c5bbd;
+}
+
+/* Contact Page */
+.contact-content {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 30px;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contact-info h2,
+.contact-form-section h2 {
+  font-size: 22px;
+  margin: 0 0 20px 0;
+  color: #222;
+}
+
+.info-item {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-icon {
+  font-size: 28px;
+}
+
+.info-item h3 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.info-item p,
+.info-item a {
+  margin: 2px 0;
+  color: #666;
+  text-decoration: none;
+}
+
+.info-item a:hover {
+  color: #1877f2;
+}
+
+.social-links {
+  margin-top: 30px;
+}
+
+.social-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.social-icons a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  transition: all 0.3s;
+}
+
+.social-icons a:hover {
+  background-color: #1877f2;
+  color: white;
+}
+
+/* Contact Form */
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #c3e6cb;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #1877f2;
+}
+
+.submit-btn {
+  padding: 14px 30px;
+  background-color: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #0c5bbd;
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Privacy Policy */
+.privacy-section {
+  margin-bottom: 35px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.privacy-section:last-child {
+  border-bottom: none;
+}
+
+.privacy-section h2 {
+  color: #1877f2;
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.privacy-section h3 {
+  color: #333;
+  font-size: 18px;
+  margin: 20px 0 10px 0;
+}
+
+.privacy-section p {
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.privacy-section ul {
+  margin: 15px 0;
+  padding-left: 30px;
+}
+
+.privacy-section li {
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 10px;
+}
+
+.contact-box {
+  background-color: #f0f8ff;
+  border: 1px solid #1877f2;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.contact-box p {
+  margin: 8px 0;
+  color: #333;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .faq-container,
+  .contact-container,
+  .privacy-container {
+    padding: 10px;
+  }
+
+  .faq-header,
+  .contact-header,
+  .privacy-header,
+  .faq-content,
+  .contact-content,
+  .privacy-content {
+    padding: 20px;
+  }
+
+  .faq-header h1,
+  .contact-header h1,
+  .privacy-header h1 {
+    font-size: 24px;
+  }
+
+  .contact-content {
+    grid-template-columns: 1fr;
+  }
+
+  .category-title {
+    font-size: 18px;
+  }
+
+  .faq-question h3 {
+    font-size: 14px;
+  }
+}

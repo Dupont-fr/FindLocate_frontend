@@ -14,6 +14,7 @@ import {
   setConversations,
 } from '../reducers/messagingReducer'
 import LikeButton from './LikeButton'
+import ReportPostModal from './ReportPostModal'
 
 const PostDetail = () => {
   const { postId } = useParams()
@@ -28,6 +29,7 @@ const PostDetail = () => {
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0)
   const [showEdit, setShowEdit] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [showReportModal, setShowReportModal] = useState(false)
 
   useEffect(() => {
     const foundPost = posts.find((p) => String(p.id) === String(postId))
@@ -156,6 +158,22 @@ const PostDetail = () => {
 
   const isVideo = (url) =>
     url.includes('.mp4') || url.includes('.webm') || url.includes('video')
+
+  const handleReportPost = async (reportData) => {
+    try {
+      await postService.reportPost(reportData)
+      dispatch(
+        showNotification(
+          'Success: Signalement envoyé. Merci pour votre contribution.',
+          4
+        )
+      )
+      setShowReportModal(false)
+    } catch (error) {
+      console.error('Erreur signalement:', error)
+      dispatch(showNotification("Error: Échec de l'envoi du signalement.", 4))
+    }
+  }
 
   return (
     <div style={styles.container}>
@@ -333,8 +351,19 @@ const PostDetail = () => {
 
           {/* Likes */}
           <Card style={styles.infoCard}>
-            <div style={styles.likesSection}>
+            <div style={styles.likesAndReportSection}>
               <LikeButton post={post} />
+
+              {/* 🆕 AJOUT: Bouton de signalement (seulement si ce n'est pas le propriétaire) */}
+              {!isOwner && (
+                <Button
+                  onClick={() => setShowReportModal(true)}
+                  style={styles.reportBtn}
+                  title='Signaler cette annonce'
+                >
+                  🚩 Signaler
+                </Button>
+              )}
             </div>
           </Card>
 
@@ -357,6 +386,13 @@ const PostDetail = () => {
           message='Voulez-vous vraiment supprimer ce post ?'
           onConfirm={handleDelete}
           onCancel={() => setConfirmDelete(false)}
+        />
+      )}
+      {showReportModal && (
+        <ReportPostModal
+          postId={post.id}
+          onClose={() => setShowReportModal(false)}
+          onSubmit={handleReportPost}
         />
       )}
     </div>
@@ -634,6 +670,23 @@ const styles = {
   likesSection: {
     display: 'flex',
     alignItems: 'center',
+  },
+  likesAndReportSection: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    flexWrap: 'wrap',
+  },
+  reportBtn: {
+    padding: '10px 16px',
+    backgroundColor: '#fff',
+    color: '#dc3545',
+    border: '2px solid #dc3545',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontWeight: '500',
+    fontSize: '14px',
+    transition: 'all 0.2s',
   },
 }
 

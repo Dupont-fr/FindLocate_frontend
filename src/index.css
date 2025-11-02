@@ -1,7 +1,7 @@
 /* ===============================
    🌍 NAVBAR PRINCIPALE
 =================================*/
-.navbar {
+/* .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -12,19 +12,19 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-}
+} */
 
 /* Logo principal */
-.navbar-logo {
+/* .navbar-logo {
   font-size: 20px;
   font-weight: bold;
   color: #1877f2;
   text-decoration: none;
   flex-shrink: 0;
-}
+} */
 
 /* Barre de recherche */
-.navbar-search {
+/* .navbar-search {
   flex: 1;
   max-width: 400px;
   padding: 8px 14px;
@@ -34,21 +34,21 @@
   outline: none;
   font-size: 14px;
   transition: all 0.3s ease;
-}
+} */
 
-.navbar-search:focus {
+/* .navbar-search:focus {
   border-color: #1877f2;
   box-shadow: 0 0 4px rgba(24, 119, 242, 0.3);
-}
+} */
 
 /* Liens et actions utilisateur */
-.navbar-links {
+/* .navbar-links {
   display: flex;
   align-items: center;
   gap: 15px;
-}
+} */
 
-.nav-link {
+/* .nav-link {
   text-decoration: none;
   color: #555;
   font-size: 14px;
@@ -58,7 +58,7 @@
 
 .nav-link:hover {
   color: #1877f2;
-}
+} */
 
 /* Nom utilisateur connecté */
 .navbar-user {
@@ -756,4 +756,63 @@
 
 .btn-secondary:hover {
   background: #ddd;
+}
+
+/* ====== STYLES NAVBAR RESPONSIVE ====== */
+
+/* Supprimer les styles par défaut de la navbar ancienne */
+.navbar {
+  all: unset;
+}
+
+/* Réinitialiser les liens */
+.navbar a,
+.nav-link {
+  all: unset;
+}
+
+/* Style pour les boutons du menu item au hover */
+button:hover {
+  opacity: 0.9;
+}
+
+/* Assurer que le menu mobile s'affiche au-dessus de tout */
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 40;
+}
+
+.mobile-menu-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 16rem; /* 256px */
+  background-color: white;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  overflow-y: auto;
+}
+
+/* Animation du menu hamburger */
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.mobile-menu-panel {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Responsive - masquer la notification badge sur très petit écran */
+@media (max-width: 480px) {
+  .notification-badge-mobile {
+    display: none;
+  }
 }

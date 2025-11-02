@@ -8,6 +8,7 @@ import { registerUser } from '../services/authService'
 import { useNavigate } from 'react-router'
 import MediaUploader from './media/MediaUploader'
 import './utils/auth-styles.css'
+import TermsModal from './utils/TermsModal'
 
 const Register = () => {
   const dispatch = useDispatch()
@@ -24,6 +25,8 @@ const Register = () => {
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [showTermsModal, setShowTermsModal] = useState(false)
+  const [termsAccepted, setTermsAccepted] = useState(false)
 
   // Validations
   const isFirstNameValid = firstName.value.trim().length >= 2
@@ -56,6 +59,10 @@ const Register = () => {
       )
       return
     }
+    if (step === 1 && !termsAccepted) {
+      setShowTermsModal(true)
+      return
+    }
     if (
       step === 2 &&
       (!phonenumber.value.trim() ||
@@ -74,6 +81,26 @@ const Register = () => {
       return
     }
     setStep((prev) => Math.min(prev + 1, 3))
+  }
+  const handleAcceptTerms = () => {
+    setTermsAccepted(true)
+    setShowTermsModal(false)
+    setStep(2) // Passer à l'étape 2
+    dispatch(
+      showNotification(
+        'Success: Conditions acceptées. Vous pouvez continuer.',
+        3
+      )
+    )
+  }
+  const handleDeclineTerms = () => {
+    setShowTermsModal(false)
+    dispatch(
+      showNotification(
+        'Warning: Vous devez accepter les conditions pour créer un compte.',
+        5
+      )
+    )
   }
 
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1))
@@ -320,6 +347,12 @@ const Register = () => {
               </button>
             </div>
           </>
+        )}
+        {showTermsModal && (
+          <TermsModal
+            onAccept={handleAcceptTerms}
+            onDecline={handleDeclineTerms}
+          />
         )}
       </form>
     </div>

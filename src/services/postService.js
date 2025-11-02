@@ -2,9 +2,6 @@ import axios from 'axios'
 
 const API_URL = 'http://localhost:3003/api/posts'
 
-/* -------------------------------------------------------------------------- */
-/* 🟩 AJOUT DU TOKEN D’AUTHENTIFICATION 🟩 */
-/* -------------------------------------------------------------------------- */
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token')
   if (!token) return { 'Content-Type': 'application/json' }
@@ -13,10 +10,6 @@ const getAuthHeaders = () => {
     Authorization: `Bearer ${token}`,
   }
 }
-
-/* -------------------------------------------------------------------------- */
-/* 🟩 CRÉATION / LECTURE / MISE À JOUR / SUPPRESSION DE POST 🟩 */
-/* -------------------------------------------------------------------------- */
 
 const createPost = async (newPost) => {
   if (!newPost.id) newPost.id = Math.random().toString(36).substring(2, 9)
@@ -55,10 +48,6 @@ const deletePost = async (id) => {
   if (!res.ok) throw new Error('Erreur suppression du post')
   return true
 }
-
-/* -------------------------------------------------------------------------- */
-/* 🟩 COMMENTAIRES 🟩 */
-/* -------------------------------------------------------------------------- */
 
 const addComment = async (postId, commentData) => {
   const response = await fetch(`${API_URL}/${postId}`)
@@ -119,13 +108,8 @@ const deleteComment = async (postId, commentId) => {
   return await updateRes.json()
 }
 
-/* -------------------------------------------------------------------------- */
-/* 🟩 NOUVELLES MÉTHODES POUR LIKES ET RÉPONSES 🟩 */
-/* -------------------------------------------------------------------------- */
-
-// ✅ Liker / déliker un commentaire
+//  Liker / déliker un commentaire
 const updateCommentLikes = async (postId, commentId, userData) => {
-  // 🟨 On ne garde que les champs essentiels de l’utilisateur
   const likeData = {
     userId: userData.userId,
     userName: userData.userName,
@@ -144,7 +128,7 @@ const updateCommentLikes = async (postId, commentId, userData) => {
   return response.data
 }
 
-// ✅ Ajouter une réponse
+//  Ajouter une réponse
 const addReply = async (postId, commentId, replyData) => {
   const cleanReply = {
     id: replyData.id || Date.now().toString(),
@@ -168,7 +152,7 @@ const addReply = async (postId, commentId, replyData) => {
   return response.data
 }
 
-// ✅ Supprimer une réponse
+//  Supprimer une réponse
 const deleteReply = async (postId, commentId, replyId) => {
   const response = await axios.patch(
     `${API_URL}/${postId}`,
@@ -182,7 +166,7 @@ const deleteReply = async (postId, commentId, replyId) => {
   return response.data
 }
 
-// ✅ Liker / déliker une réponse
+//  Liker / déliker une réponse
 const updateReplyLikes = async (postId, commentId, replyId, userData) => {
   const likeData = {
     userId: userData.userId,
@@ -202,10 +186,6 @@ const updateReplyLikes = async (postId, commentId, replyId, userData) => {
   )
   return response.data
 }
-
-/* -------------------------------------------------------------------------- */
-/* 🟩 AUTRES UTILITAIRES 🟩 */
-/* -------------------------------------------------------------------------- */
 
 const updatePostLikes = async (postId, likesArray) => {
   const response = await axios.patch(
@@ -274,9 +254,13 @@ const syncUserInfoInDatabase = async (
   }
 }
 
-/* -------------------------------------------------------------------------- */
-/* 🟩 EXPORT FINAL 🟩 */
-/* -------------------------------------------------------------------------- */
+const reportPost = async (reportData) => {
+  const response = await axios.post(`${API_URL}/report`, reportData, {
+    headers: getAuthHeaders(),
+  })
+  return response.data
+}
+
 export default {
   createPost,
   getAllPosts,
@@ -292,4 +276,5 @@ export default {
   deletePost,
   getPostsByUser,
   syncUserInfoInDatabase,
+  reportPost,
 }

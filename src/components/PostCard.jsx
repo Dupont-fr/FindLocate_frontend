@@ -114,7 +114,7 @@ const PostCard = ({ post }) => {
 
 const styles = {
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: '#e8f5ffff',
     borderRadius: '12px',
     overflow: 'hidden',
     cursor: 'pointer',
