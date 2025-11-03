@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   addMessage,
   updateConversation,
   setConversations,
   setActiveConversation,
+  markConversationAsRead,
 } from '../../reducers/messagingReducer'
 import messagingService from '../../services/MessagingService'
 import { showNotification } from '../../reducers/notificationReducer'
@@ -16,10 +17,6 @@ const ConversationDetail = ({ conversation, onBack }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
 
-  // ✅ DEBUG: Vérifier si onBack existe
-  useEffect(() => {
-    console.log('🔍 ConversationDetail - onBack exists:', !!onBack)
-  }, [onBack])
   const [messageText, setMessageText] = useState('')
   const [loading, setLoading] = useState(false)
   const [editingMessage, setEditingMessage] = useState(null)
@@ -32,39 +29,78 @@ const ConversationDetail = ({ conversation, onBack }) => {
   const [showMediaOptions, setShowMediaOptions] = useState(false)
   const [uploadingMedia, setUploadingMedia] = useState(false)
   const [isParticipantOnline, setIsParticipantOnline] = useState(false)
+
   const typingTimeoutRef = useRef(null)
   const messagesEndRef = useRef(null)
 
   const messages = conversation.messages || []
 
-  // Auto-scroll
+  // ✅ Auto-scroll vers le bas
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  // Gestion WebSocket
+  // ✅ Marquer messages comme lus à l'ouverture
+  useEffect(() => {
+    if (!conversation?.id || !user?.id) return
+
+    const markAsRead = async () => {
+      try {
+        console.log('📖 Marquage messages comme lus:', conversation.id)
+        dispatch(markConversationAsRead(conversation.id))
+        await messagingService.markMessagesAsRead(conversation.id)
+        socketService.markMessagesRead(conversation.id, user.id)
+      } catch (error) {
+        console.error('❌ Erreur marquage messages lus:', error)
+      }
+    }
+
+    markAsRead()
+  }, [conversation?.id, user?.id, dispatch])
+
+  // ✅ WEBSOCKET - Gestion complète
   useEffect(() => {
     if (!conversation?.id) return
 
+    console.log('🔌 Connexion WebSocket pour conversation:', conversation.id)
+
     socketService.joinConversation(conversation.id)
 
+    // ✅ Réception nouveau message
     const handleMessageReceive = ({ conversationId, message }) => {
+      console.log('📨 Message reçu via WebSocket:', message)
+
       if (conversationId === conversation.id) {
         const messageExists = conversation.messages.some(
           (m) => m.id === message.id || m._id === message.id
         )
 
         if (!messageExists) {
-          dispatch(addMessage({ conversationId, message }))
-        }
+          console.log('➕ Ajout du message au store Redux')
+          dispatch(
+            addMessage({
+              conversationId,
+              message,
+              isOwnMessage: message.senderId === user.id,
+            })
+          )
 
-        if (message.senderId !== user.id) {
-          messagingService.markMessagesAsRead(conversationId)
+          // Marquer comme lu si je ne suis pas l'expéditeur
+          if (message.senderId !== user.id) {
+            console.log('✅ Marquage automatique comme lu')
+            messagingService.markMessagesAsRead(conversationId)
+            socketService.markMessagesRead(conversationId, user.id)
+          }
+        } else {
+          console.log('⚠ Message déjà présent, ignoré')
         }
       }
     }
 
+    // ✅ Message modifié
     const handleMessageUpdated = ({ conversationId, messageId, text }) => {
+      console.log('✏ Message modifié:', messageId)
+
       if (conversationId === conversation.id) {
         const updated = {
           ...conversation,
@@ -76,7 +112,10 @@ const ConversationDetail = ({ conversation, onBack }) => {
       }
     }
 
+    // ✅ Message supprimé
     const handleMessageDeleted = ({ conversationId, messageId }) => {
+      console.log('🗑 Message supprimé:', messageId)
+
       if (conversationId === conversation.id) {
         const updated = {
           ...conversation,
@@ -86,36 +125,67 @@ const ConversationDetail = ({ conversation, onBack }) => {
       }
     }
 
+    // ✅ Indicateur "en train d'écrire"
     const handleTypingUpdate = ({
       conversationId,
       userId,
       userName,
       isTyping,
     }) => {
+      console.log('⌨ Typing update:', { userId, userName, isTyping })
+
       if (conversationId === conversation.id && userId !== user.id) {
         setTypingUser(isTyping ? userName : null)
       }
     }
 
+    // ✅ Statut utilisateur (online/offline)
     const handleUserStatus = ({ userId, status }) => {
+      console.log('👤 Statut utilisateur:', { userId, status })
+
       if (userId === conversation.participantId) {
         setIsParticipantOnline(status === 'online')
       }
     }
 
+    // ✅ Confirmation de lecture (double check)
+    const handleMessagesRead = ({ conversationId, userId }) => {
+      console.log('✓✓ Messages lus par:', userId)
+
+      if (conversationId === conversation.id && userId !== user.id) {
+        const updated = {
+          ...conversation,
+          messages: conversation.messages.map((msg) =>
+            msg.senderId === user.id ? { ...msg, isRead: true } : msg
+          ),
+        }
+        dispatch(updateConversation(updated))
+      }
+    }
+
+    // ✅ Enregistrement des listeners
     socketService.onMessageReceive(handleMessageReceive)
     socketService.onMessageUpdated(handleMessageUpdated)
     socketService.onMessageDeleted(handleMessageDeleted)
     socketService.onTypingUpdate(handleTypingUpdate)
     socketService.onUserStatus(handleUserStatus)
+    socketService.onMessagesRead(handleMessagesRead)
 
+    console.log('✅ Tous les listeners WebSocket enregistrés')
+
+    // ✅ Nettoyage
     return () => {
+      console.log(
+        '🔌 Déconnexion WebSocket pour conversation:',
+        conversation.id
+      )
       socketService.leaveConversation(conversation.id)
       socketService.offMessageReceive()
       socketService.offMessageUpdated()
       socketService.offMessageDeleted()
       socketService.offTypingUpdate()
       socketService.offUserStatus()
+      socketService.offMessagesRead()
     }
   }, [
     conversation?.id,
@@ -125,15 +195,17 @@ const ConversationDetail = ({ conversation, onBack }) => {
     conversation.participantId,
   ])
 
+  // ✅ Gestion de la saisie
   const handleTyping = (e) => {
     setMessageText(e.target.value)
 
-    if (!isTyping) {
+    if (!isTyping && e.target.value) {
       setIsTyping(true)
+      console.log('⌨ Début de frappe')
       socketService.startTyping(
         conversation.id,
         user.id,
-        `${user.firstName} ${user.lastName}`
+        ` ${user.firstName} ${user.lastName}`
       )
     }
 
@@ -143,10 +215,12 @@ const ConversationDetail = ({ conversation, onBack }) => {
 
     typingTimeoutRef.current = setTimeout(() => {
       setIsTyping(false)
+      console.log('⌨ Fin de frappe')
       socketService.stopTyping(conversation.id, user.id)
     }, 2000)
   }
 
+  // ✅ Envoi de message
   const handleSendMessage = async (e) => {
     e.preventDefault()
     if (!messageText.trim()) return
@@ -160,12 +234,35 @@ const ConversationDetail = ({ conversation, onBack }) => {
         setIsTyping(false)
       }
 
+      console.log('📤 Envoi message:', messageToSend)
+
+      // Créer message optimiste
+      const optimisticMessage = {
+        id: Date.now().toString(),
+        senderId: user.id,
+        senderName: `${user.firstName} ${user.lastName}`,
+        senderAvatar: user.profilePicture,
+        text: messageToSend,
+        isRead: true, // Mon propre message est déjà lu
+        createdAt: new Date().toISOString(),
+      }
+
+      // ✅ Ajouter immédiatement à Redux (optimiste)
+      dispatch(
+        addMessage({
+          conversationId: conversation.id,
+          message: optimisticMessage,
+          isOwnMessage: true,
+        })
+      )
+
+      // ✅ Envoyer au backend
       await messagingService.addMessage(conversation.id, messageToSend)
 
       setMessageText('')
-      dispatch(showNotification('success: Message envoyé avec succès !', 3))
+      console.log('✅ Message envoyé avec succès')
     } catch (error) {
-      console.error('Erreur:', error)
+      console.error('❌ Erreur envoi message:', error)
       dispatch(showNotification("Error: Échec de l'envoi du message.", 5))
     } finally {
       setLoading(false)
@@ -239,7 +336,6 @@ const ConversationDetail = ({ conversation, onBack }) => {
       dispatch(setConversations(updatedList))
       dispatch(setActiveConversation(null))
 
-      // ✅ Si onBack existe, l'appeler après suppression
       if (onBack) {
         onBack()
       }
@@ -257,7 +353,7 @@ const ConversationDetail = ({ conversation, onBack }) => {
 
   return (
     <div style={styles.container}>
-      {/* En-tête avec bouton retour */}
+      {/* En-tête */}
       <div style={styles.hero}>
         {onBack && (
           <button
@@ -265,7 +361,7 @@ const ConversationDetail = ({ conversation, onBack }) => {
             style={styles.backButton}
             aria-label='Retour'
           >
-            🡰
+            ←
           </button>
         )}
 
@@ -284,7 +380,7 @@ const ConversationDetail = ({ conversation, onBack }) => {
         <div style={styles.headerInfo}>
           <h3 style={styles.headerTitle}>{conversation.participantName}</h3>
           <span style={styles.statusText}>
-            {isParticipantOnline ? 'En ligne' : 'Hors ligne'}
+            {isParticipantOnline ? '🟢 En ligne' : '⚪ Hors ligne'}
           </span>
         </div>
 
@@ -298,11 +394,11 @@ const ConversationDetail = ({ conversation, onBack }) => {
           }}
           aria-label='Supprimer la conversation'
         >
-          🗑️
+          🗑
         </button>
       </div>
 
-      {/* Liste des messages */}
+      {/* Messages */}
       <div style={styles.messagesContainer}>
         {messages.length === 0 ? (
           <div style={styles.emptyMessages}>
@@ -379,15 +475,30 @@ const ConversationDetail = ({ conversation, onBack }) => {
                     hour: '2-digit',
                     minute: '2-digit',
                   })}
-                  {msg.updatedAt && ' (modifié)'}
+                  {msg.senderId === user.id && (
+                    <span
+                      style={{
+                        marginLeft: '5px',
+                        color: msg.isRead ? '#4fc3f7' : 'rgba(255,255,255,0.7)',
+                      }}
+                    >
+                      {msg.isRead ? '✓✓' : '✓'}
+                    </span>
+                  )}
                 </small>
               </div>
             </div>
           ))
         )}
 
+        {/* ✅ Indicateur "en train d'écrire" */}
         {typingUser && (
           <div style={styles.typingIndicator}>
+            <div style={styles.typingDots}>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
             <em>{typingUser} est en train d'écrire...</em>
           </div>
         )}
@@ -415,15 +526,6 @@ const ConversationDetail = ({ conversation, onBack }) => {
               accept='video/*'
             />
           </div>
-          {/* <div style={styles.mediaOption}>
-            <span>📄 Document</span>
-            <MediaUploader
-              onUploadComplete={(url) => handleMediaUpload(url, '*')}
-              setIsUploading={setUploadingMedia}
-              maxFiles={1}
-              accept='*'
-            />
-          </div> */}
         </div>
       )}
 
@@ -435,7 +537,7 @@ const ConversationDetail = ({ conversation, onBack }) => {
           style={styles.attachButton}
           disabled={uploadingMedia}
         >
-          files
+          📎
         </button>
 
         <input
@@ -446,6 +548,7 @@ const ConversationDetail = ({ conversation, onBack }) => {
           disabled={loading || uploadingMedia}
           style={styles.input}
         />
+
         <button
           type='submit'
           disabled={loading || uploadingMedia || !messageText.trim()}
@@ -454,7 +557,7 @@ const ConversationDetail = ({ conversation, onBack }) => {
             opacity: loading || uploadingMedia || !messageText.trim() ? 0.5 : 1,
           }}
         >
-          {loading || uploadingMedia ? '...' : 'Envoyer'}
+          {loading || uploadingMedia ? '⏳' : '➤'}
         </button>
       </form>
 
@@ -520,6 +623,7 @@ const ConversationDetail = ({ conversation, onBack }) => {
   )
 }
 
+// ✅ STYLES COMPLETS
 const styles = {
   container: {
     display: 'flex',
@@ -535,16 +639,15 @@ const styles = {
     padding: '12px 15px',
     backgroundColor: '#1877f2',
     borderBottom: '1px solid #e0e0e0',
-    position: 'relative', // ✅ Permet d'utiliser le z-index
-    zIndex: 2, // ✅ S’assure que ce soit visible au-dessus des autres éléments
-    marginTop: '70px', // ✅ Ajuste cette valeur selon la hauteur de ta navbar
+    position: 'sticky',
+    top: 0,
+    zIndex: 10,
   },
-
   backButton: {
     backgroundColor: 'transparent',
     border: 'none',
     color: '#fff',
-    fontSize: '20px',
+    fontSize: '24px',
     cursor: 'pointer',
     padding: '5px',
     display: 'flex',
@@ -559,6 +662,7 @@ const styles = {
     width: '40px',
     height: '40px',
     borderRadius: '50%',
+    objectFit: 'cover',
   },
   onlineIndicator: {
     position: 'absolute',
@@ -589,6 +693,20 @@ const styles = {
     fontSize: '12px',
     color: 'rgba(255, 255, 255, 0.8)',
   },
+  deleteConvBtn: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '50%',
+    width: '36px',
+    height: '36px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    fontSize: '16px',
+    flexShrink: 0,
+  },
   messagesContainer: {
     flex: 1,
     overflowY: 'auto',
@@ -598,24 +716,86 @@ const styles = {
     gap: '10px',
     backgroundColor: '#f5f5f5',
   },
-  messageWrapper: { display: 'flex' },
+  emptyMessages: {
+    textAlign: 'center',
+    padding: '40px',
+    color: '#999',
+  },
+  messageWrapper: {
+    display: 'flex',
+    animation: 'slideIn 0.3s ease',
+  },
   message: {
     maxWidth: '60%',
     padding: '10px 12px',
     borderRadius: '18px',
     wordWrap: 'break-word',
     position: 'relative',
+    boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
   },
   messageText: {
     margin: 0,
-    fontSize: '13px',
+    fontSize: '14px',
     wordBreak: 'break-word',
+    lineHeight: '1.4',
   },
   messageTime: {
     fontSize: '11px',
     opacity: 0.7,
     display: 'block',
     marginTop: '4px',
+  },
+  menuWrapper: {
+    position: 'absolute',
+    top: '-5px',
+    right: '-5px',
+  },
+  menuButton: {
+    background: 'rgba(0,0,0,0.2)',
+    border: 'none',
+    color: '#fff',
+    fontSize: '18px',
+    cursor: 'pointer',
+    padding: '5px 8px',
+    borderRadius: '4px',
+  },
+  dropdownMenu: {
+    position: 'absolute',
+    top: '25px',
+    right: '0',
+    backgroundColor: '#fff',
+    borderRadius: '8px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    zIndex: 10,
+    minWidth: '120px',
+  },
+  dropdownItem: {
+    padding: '10px 12px',
+    background: 'none',
+    border: 'none',
+    textAlign: 'left',
+    cursor: 'pointer',
+    fontSize: '13px',
+    transition: 'background 0.2s',
+  },
+  typingIndicator: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    padding: '10px 12px',
+    fontSize: '13px',
+    color: '#65676b',
+    fontStyle: 'italic',
+    backgroundColor: '#fff',
+    borderRadius: '18px',
+    maxWidth: '60%',
+  },
+  typingDots: {
+    display: 'flex',
+    gap: '4px',
   },
   form: {
     display: 'flex',
@@ -625,12 +805,11 @@ const styles = {
     backgroundColor: '#fff',
   },
   attachButton: {
-    padding: '5px',
+    padding: '8px',
     backgroundColor: 'transparent',
     border: 'none',
     fontSize: '20px',
     cursor: 'pointer',
-    //marginTop: '0.0001px',
   },
   input: {
     flex: 1,
@@ -646,7 +825,7 @@ const styles = {
     color: '#fff',
     border: 'none',
     borderRadius: '20px',
-    fontSize: '13px',
+    fontSize: '16px',
     fontWeight: 'bold',
     cursor: 'pointer',
   },
@@ -663,52 +842,6 @@ const styles = {
     alignItems: 'center',
     gap: '5px',
     fontSize: '12px',
-  },
-  typingIndicator: {
-    padding: '8px 12px',
-    fontSize: '13px',
-    color: '#65676b',
-    fontStyle: 'italic',
-  },
-  emptyMessages: {
-    textAlign: 'center',
-    padding: '40px',
-    color: '#999',
-  },
-  menuWrapper: {
-    position: 'absolute',
-    top: '-5px',
-    right: '-5px',
-  },
-  menuButton: {
-    background: 'none',
-    border: 'none',
-    color: '#fff',
-    fontSize: '18px',
-    cursor: 'pointer',
-    padding: '5px',
-  },
-  dropdownMenu: {
-    position: 'absolute',
-    top: '25px',
-    right: '0',
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden',
-    zIndex: 10,
-    minWidth: '120px',
-  },
-  dropdownItem: {
-    padding: '8px 12px',
-    background: 'none',
-    border: 'none',
-    textAlign: 'left',
-    cursor: 'pointer',
-    fontSize: '13px',
-    transition: 'background 0.2s',
   },
   modalOverlay: {
     position: 'fixed',
@@ -745,6 +878,7 @@ const styles = {
     padding: '10px 16px',
     cursor: 'pointer',
     fontSize: '14px',
+    flex: 1,
   },
   textarea: {
     width: '100%',
@@ -756,20 +890,6 @@ const styles = {
     resize: 'none',
     boxSizing: 'border-box',
     fontFamily: 'inherit',
-  },
-  deleteConvBtn: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '50%',
-    width: '36px',
-    height: '36px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    fontSize: '16px',
-    flexShrink: 0,
   },
 }
 

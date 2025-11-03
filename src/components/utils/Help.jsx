@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router'
-import './pages-styles.css'
+import './Help.css'
 
 const Help = () => {
   const navigate = useNavigate()

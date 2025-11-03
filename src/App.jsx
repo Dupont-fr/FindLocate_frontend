@@ -36,6 +36,7 @@ import Help from './components/utils/Help'
 import PrivacyPolicy from './components/utils/PrivacyPolicy'
 import Contact from './components/utils/Contact'
 import FAQ from './components/utils/FAQ'
+import SplashScreen from './components/SplashScreen'
 
 const App = () => {
   const { user, isAuthenticated } = useSelector((state) => state.auth)
@@ -45,6 +46,8 @@ const App = () => {
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false)
   // État pour détecter la taille de l'écran (responsive)
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024)
+  const [showSplash, setShowSplash] = useState(true)
+  const [setAppReady] = useState(false)
 
   useEffect(() => {
     if (isAuthenticated && user?.id) {
@@ -66,6 +69,32 @@ const App = () => {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  useEffect(() => {
+    const startTime = Date.now()
+    const initApp = async () => {
+      try {
+        setAppReady(true)
+      } catch (error) {
+        console.error('Erreur de chargement:', error)
+        setAppReady(true)
+      }
+    }
+    initApp()
+    const minDisplayTime = 5000
+    const timer = setTimeout(() => {
+      const elapsedTime = Date.now() - startTime
+      if (elapsedTime >= minDisplayTime) {
+        setShowSplash(false)
+      } else {
+        setTimeout(() => setShowSplash(false), minDisplayTime - elapsedTime)
+      }
+    }, minDisplayTime)
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (showSplash) {
+    return <SplashScreen />
+  }
   // Fonction pour fermer le menu mobile après navigation
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false)
@@ -88,7 +117,7 @@ const App = () => {
       left: 0,
       right: 0,
       zIndex: 1000,
-      height: '72px',
+      height: '80px',
     },
     container: {
       maxWidth: '1400px',
@@ -225,8 +254,17 @@ const App = () => {
               >
                 <div style={navbarStyles.logo}>
                   {/* Remplacez par votre logo */}
-                  {/* <img src="/path/to/logo.png" alt="Logo" style={{width: '100%', height: '100%', objectFit: 'contain', borderRadius: '8px'}} /> */}
-                  <span
+                  <img
+                    src='/logo3.png'
+                    alt='Logo'
+                    style={{
+                      width: '9000px',
+                      height: '100px',
+                      objectFit: 'contain',
+                      borderRadius: '8px',
+                    }}
+                  />
+                  {/* <span
                     style={{
                       color: '#fff',
                       fontSize: '20px',
@@ -234,7 +272,7 @@ const App = () => {
                     }}
                   >
                     FL
-                  </span>
+                  </span> */}
                 </div>
                 {/* <span style={navbarStyles.logoText}>FindLocate</span> */}
               </Link>

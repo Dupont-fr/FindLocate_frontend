@@ -56,6 +56,8 @@ export const resendVerificationEmail = async (email) => {
 // Connexion utilisateur
 export const loginUser = async (email, password) => {
   try {
+    const role = location.state?.role || 'user' // Ajoutez ceci
+    await resendVerificationEmail(email, role)
     const response = await axios.post(`${API_URL}/login`, {
       email,
       password,

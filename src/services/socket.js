@@ -32,7 +32,6 @@ class SocketService {
     }
   }
 
-  // --- CONVERSATIONS ---
   joinConversation(conversationId) {
     this.socket?.emit('conversation:join', conversationId)
   }
@@ -41,10 +40,10 @@ class SocketService {
     this.socket?.emit('conversation:leave', conversationId)
   }
 
-  // --- MESSAGES ---
   onMessageReceive(callback) {
     this.socket?.on('message:receive', callback)
   }
+
   offMessageReceive(callback) {
     this.socket?.off('message:receive', callback)
   }
@@ -52,6 +51,7 @@ class SocketService {
   onMessageUpdated(callback) {
     this.socket?.on('message:updated', callback)
   }
+
   offMessageUpdated(callback) {
     this.socket?.off('message:updated', callback)
   }
@@ -59,11 +59,11 @@ class SocketService {
   onMessageDeleted(callback) {
     this.socket?.on('message:deleted', callback)
   }
+
   offMessageDeleted(callback) {
     this.socket?.off('message:deleted', callback)
   }
 
-  // --- TYPING ---
   startTyping(conversationId, userId, userName) {
     this.socket?.emit('typing:start', { conversationId, userId, userName })
   }
@@ -75,11 +75,11 @@ class SocketService {
   onTypingUpdate(callback) {
     this.socket?.on('typing:update', callback)
   }
+
   offTypingUpdate(callback) {
     this.socket?.off('typing:update', callback)
   }
 
-  // --- LECTURE ---
   markMessagesRead(conversationId, userId) {
     this.socket?.emit('messages:read', { conversationId, userId })
   }
@@ -87,19 +87,18 @@ class SocketService {
   onMessagesRead(callback) {
     this.socket?.on('messages:read:update', callback)
   }
+
   offMessagesRead(callback) {
     this.socket?.off('messages:read:update', callback)
   }
 
-  // --- STATUT UTILISATEUR ---
   onUserStatus(callback) {
     this.socket?.on('user:status', callback)
   }
+
   offUserStatus(callback) {
     this.socket?.off('user:status', callback)
   }
-
-  // 🆕 AJOUT: NOTIFICATIONS - Likes
   onNotificationLike(callback) {
     this.socket?.on('notification:new-like', callback)
   }
@@ -139,7 +138,6 @@ class SocketService {
     this.socket?.off('notification:friend-accepted', callback)
   }
 
-  // --- AUTRES ---
   removeAllListeners() {
     this.socket?.removeAllListeners()
   }

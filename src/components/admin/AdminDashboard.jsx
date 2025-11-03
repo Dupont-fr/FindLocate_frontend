@@ -22,6 +22,7 @@ import {
   Radar,
 } from 'recharts'
 import './AdminDashboard.css'
+import LoadingSpinner from '../LoadingSpinner'
 
 const AdminDashboard = () => {
   const { user, isAuthenticated } = useSelector((state) => state.auth)
@@ -259,7 +260,8 @@ const AdminDashboard = () => {
   }
 
   if (loading) {
-    return <div className='admin-loading'>Chargement des données...</div>
+    // return <div className='admin-loading'>Chargement des données...</div>
+    return <LoadingSpinner fullScreen text='Chargement des données...' />
   }
 
   if (!stats) {

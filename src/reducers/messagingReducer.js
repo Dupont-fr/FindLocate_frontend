@@ -9,59 +9,71 @@ const messagingSlice = createSlice({
     error: null,
   },
   reducers: {
-    // --- Charger les conversations ---
     setConversations: (state, action) => {
       state.conversations = action.payload
     },
 
-    // --- Définir la conversation active ---
     setActiveConversation: (state, action) => {
       state.activeConversationId = action.payload
     },
 
-    // --- Ajouter une nouvelle conversation ---
     addConversation: (state, action) => {
       const exists = state.conversations.some((c) => c.id === action.payload.id)
       if (!exists) {
         state.conversations.unshift(action.payload)
       }
-      if (!state.activeConversationId) {
-        state.activeConversationId = action.payload.id
-      }
     },
 
-    // --- Mettre à jour une conversation ---
     updateConversation: (state, action) => {
       const index = state.conversations.findIndex(
         (c) => c.id === action.payload.id
       )
       if (index !== -1) {
         state.conversations[index] = action.payload
-      } else {
-        state.conversations.unshift(action.payload)
       }
     },
 
-    // --- Ajouter un message ---
     addMessage: (state, action) => {
       const { conversationId, message, isOwnMessage } = action.payload
       const conversation = state.conversations.find(
         (c) => c.id === conversationId
       )
+
       if (conversation) {
         if (!conversation.messages) conversation.messages = []
-        conversation.messages.push(message)
+
+        conversation.messages.push({
+          ...message,
+          isRead: isOwnMessage,
+        })
+
         conversation.lastMessage = message.text
         conversation.lastMessageTime = message.createdAt
 
-        // Incrémente le compteur si message reçu
         if (!isOwnMessage) {
           conversation.unreadCount = (conversation.unreadCount || 0) + 1
         }
       }
     },
 
-    // --- Modifier un message ---
+    markConversationAsRead: (state, action) => {
+      const conversationId = action.payload
+      const conversation = state.conversations.find(
+        (c) => c.id === conversationId
+      )
+
+      if (conversation) {
+        conversation.unreadCount = 0
+
+        if (conversation.messages) {
+          conversation.messages = conversation.messages.map((msg) => ({
+            ...msg,
+            isRead: true,
+          }))
+        }
+      }
+    },
+
     editMessage: (state, action) => {
       const { conversationId, messageId, newText } = action.payload
       const conversation = state.conversations.find(
@@ -76,7 +88,6 @@ const messagingSlice = createSlice({
       }
     },
 
-    // --- Supprimer un message ---
     deleteMessage: (state, action) => {
       const { conversationId, messageId } = action.payload
       const conversation = state.conversations.find(
@@ -89,7 +100,6 @@ const messagingSlice = createSlice({
       }
     },
 
-    // --- Supprimer une conversation complète ---
     deleteConversation: (state, action) => {
       const conversationId = action.payload
       state.conversations = state.conversations.filter(
@@ -100,10 +110,10 @@ const messagingSlice = createSlice({
       }
     },
 
-    // --- Gestion du chargement et des erreurs ---
     setLoading: (state, action) => {
       state.loading = action.payload
     },
+
     setError: (state, action) => {
       state.error = action.payload
     },
@@ -116,6 +126,7 @@ export const {
   addConversation,
   updateConversation,
   addMessage,
+  markConversationAsRead,
   editMessage,
   deleteMessage,
   deleteConversation,
@@ -123,7 +134,6 @@ export const {
   setError,
 } = messagingSlice.actions
 
-// --- Sélecteur de la conversation active ---
 export const selectActiveConversation = (state) =>
   state.messaging.conversations.find(
     (c) => c.id === state.messaging.activeConversationId

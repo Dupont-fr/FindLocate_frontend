@@ -1,11 +1,8 @@
-// ✅ AJOUT: Import axios et getToken
 import axios from 'axios'
 import { getToken } from './authService'
 
-// ✅ MODIFIÉ: Changer l'URL pour pointer vers l'API backend avec authentification
 const API_URL = 'http://localhost:3003/api/conversations'
 
-// ✅ AJOUT: Configuration pour inclure le token JWT
 const getConfig = () => ({
   headers: {
     Authorization: `Bearer ${getToken()}`,
@@ -14,13 +11,31 @@ const getConfig = () => ({
 })
 
 /**
- * Récupérer toutes les conversations de l'utilisateur connecté
- * ✅ MODIFIÉ: Utilise axios + authentification JWT (le backend filtre automatiquement)
+ * Calculer le nombre de messages non lus
+ */
+const calculateUnreadCount = (conversation) => {
+  if (!conversation.messages) return 0
+
+  const currentUserId = JSON.parse(localStorage.getItem('user'))?.id
+
+  return conversation.messages.filter(
+    (msg) => msg.senderId !== currentUserId && !msg.isRead
+  ).length
+}
+
+/**
+ * Récupérer toutes les conversations avec compteur non lus
  */
 const getUserConversations = async () => {
   try {
     const response = await axios.get(API_URL, getConfig())
-    return response.data
+
+    const conversationsWithUnread = response.data.map((conv) => ({
+      ...conv,
+      unreadCount: calculateUnreadCount(conv),
+    }))
+
+    return conversationsWithUnread
   } catch (error) {
     console.error('❌ Erreur getUserConversations:', error)
     throw new Error(
@@ -31,7 +46,6 @@ const getUserConversations = async () => {
 
 /**
  * Récupérer une conversation spécifique
- * ✅ MODIFIÉ: Utilise axios + authentification JWT
  */
 const getConversation = async (conversationId) => {
   try {
@@ -47,8 +61,7 @@ const getConversation = async (conversationId) => {
 }
 
 /**
- * Créer une nouvelle conversation ou récupérer une existante
- * ✅ MODIFIÉ: Format simplifié - le backend gère user1 automatiquement
+ * Créer une nouvelle conversation
  */
 const createConversation = async (user2Id, user2Name, user2Avatar) => {
   try {
@@ -67,8 +80,7 @@ const createConversation = async (user2Id, user2Name, user2Avatar) => {
 }
 
 /**
- * Ajouter un message à une conversation
- * ✅ MODIFIÉ: Support des médias (images, vidéos, documents)
+ * Ajouter un message
  */
 const addMessage = async (
   conversationId,
@@ -80,8 +92,15 @@ const addMessage = async (
 ) => {
   try {
     const response = await axios.post(
-      `${API_URL}/${conversationId}/messages`,
-      { text, mediaType, mediaUrl, mediaName, mediaSize },
+      ` ${API_URL}/${conversationId}/messages`,
+      {
+        text,
+        mediaType,
+        mediaUrl,
+        mediaName,
+        mediaSize,
+        isRead: false,
+      },
       getConfig()
     )
     return response.data
@@ -93,7 +112,6 @@ const addMessage = async (
 
 /**
  * Modifier un message
- * ✅ AJOUT: Nouvelle route RESTful
  */
 const updateMessage = async (conversationId, messageId, text) => {
   try {
@@ -113,12 +131,11 @@ const updateMessage = async (conversationId, messageId, text) => {
 
 /**
  * Supprimer un message
- * ✅ MODIFIÉ: Utilise la nouvelle route RESTful
  */
 const deleteMessage = async (conversationId, messageId) => {
   try {
     const response = await axios.delete(
-      `${API_URL}/${conversationId}/messages/${messageId}`,
+      ` ${API_URL}/${conversationId}/messages/${messageId}`,
       getConfig()
     )
     return response.data
@@ -129,13 +146,12 @@ const deleteMessage = async (conversationId, messageId) => {
 }
 
 /**
- * Marquer tous les messages d'une conversation comme lus
- * ✅ AJOUT: Nouvelle fonctionnalité
+ * Marquer tous les messages comme lus
  */
 const markMessagesAsRead = async (conversationId) => {
   try {
     const response = await axios.patch(
-      `${API_URL}/${conversationId}/read`,
+      ` ${API_URL}/${conversationId}/read`,
       {},
       getConfig()
     )
@@ -149,8 +165,7 @@ const markMessagesAsRead = async (conversationId) => {
 }
 
 /**
- * Supprimer une conversation (suppression logique)
- * ✅ MODIFIÉ: Plus besoin de passer userId - le backend le récupère du token
+ * Supprimer une conversation
  */
 const deleteConversationForUser = async (conversationId) => {
   try {
@@ -165,8 +180,7 @@ const deleteConversationForUser = async (conversationId) => {
 }
 
 /**
- * Vérifie s'il existe une conversation entre deux utilisateurs
- * ✅ CONSERVÉ: Pour compatibilité (utilise getUserConversations)
+ * Vérifier si conversation existe
  */
 const findExistingConversation = async (userId1, userId2) => {
   try {
@@ -194,4 +208,5 @@ export default {
   markMessagesAsRead,
   deleteConversationForUser,
   findExistingConversation,
+  calculateUnreadCount,
 }
